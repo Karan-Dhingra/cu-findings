@@ -8,6 +8,7 @@ import {
     Platform,
     StatusBar,
     TouchableOpacity,
+    Image,
 } from 'react-native';
 import React from 'react';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd.jsx';
@@ -29,6 +30,7 @@ const Home = () => {
                     </View>
 
                     <TouchableOpacity style={styles.add_button}>
+                        <Image source={require('../../assets/add_post.png')} resizeMode='contain' />
                         {/* <Icon name='Add' /> */}
                     </TouchableOpacity>
                 </View>
@@ -36,6 +38,11 @@ const Home = () => {
                 {/* Lost Items List */}
                 <View style={styles.search_field}>
                     <Text style={styles.search_heading}>Search lost Items</Text>
+
+                    <TouchableOpacity style={styles.add_button}>
+                        <Image source={require('../../assets/search.png')} resizeMode='contain' />
+                        {/* <Icon name='Add' /> */}
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.all_posts}>
@@ -104,22 +111,19 @@ const styles = StyleSheet.create({
         color: '#E1DEF9',
     },
     add_button: {
-        backgroundColor: '#FFF',
-        width: 33,
-        height: 33,
-        minWidth: 33,
-        minHeight: 33,
-        borderRadius: 100,
     },
     search_field: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     all_posts: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
+        paddingBottom: 80,
     },
     search_heading: {
         color: 'rgba(0, 20, 31, 0.8)',

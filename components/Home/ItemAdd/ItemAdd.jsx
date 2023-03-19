@@ -11,7 +11,7 @@ const ItemAdd = () => {
                 <Text style={styles.post_claims}>No claims</Text>
             </View>
             <View style={styles.right_wrapper}>
-                {/* <Image /> */}
+                <Image source={require('../../../assets/dummy.png')} resizeMode='contain'/>
             </View>
         </TouchableOpacity>
     );
@@ -32,14 +32,13 @@ const styles = StyleSheet.create({
         borderColor: '#00000026',
         marginTop: 10,
         marginBottom: 10,
-        boxShadow: '0px -1px 19px rgba(0, 0, 0, 0.15)',
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 2,
-        // },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 10,
-        // elevation: 4,
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.5,
+        elevation: 4,
         width: '100%',
         flex: 1
     },
@@ -86,8 +85,6 @@ const styles = StyleSheet.create({
         minWidth: 100,
         borderRadius: 4,
         height: 80,
-        background: '#ccc',
-        borderWidth: 2
     }
 })
 
