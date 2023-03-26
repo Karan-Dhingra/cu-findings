@@ -1,16 +1,31 @@
-import Home from './screens/Home/Home.jsx';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { View, Image, TouchableOpacity } from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import Home from './screens/Home/Home.jsx';
+import ItemPage from './screens/ItemPage/ItemPage.jsx';
+import Notification from './screens/Notification/Notification.jsx';
+import Profile from './screens/Profile/Profile.jsx';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+
+const HomeScreen = () =>{
+  return(
+    <Stack.Navigator >
+      <Stack.Screen name="Home" options={{headerShown: false}} component={Home} />
+      <Stack.Screen name="Item" options={{headerShown: false}} component={ItemPage} />
+    </Stack.Navigator>
+  )
+}
 
 function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        initialRouteName='HomeScreen'
         screenOptions={{
           showLabel: false,
           tabBarStyle: {
@@ -25,7 +40,7 @@ function App() {
       >
         <Tab.Screen
           name="Profile"
-          component={Home}
+          component={Profile}
           options={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -47,8 +62,8 @@ function App() {
         />
 
         <Tab.Screen
-          name="Home"
-          component={Home}
+          name="HomeScreen"
+          component={HomeScreen}
           options={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -71,7 +86,7 @@ function App() {
 
         <Tab.Screen
           name="Notification"
-          component={Home}
+          component={Notification}
           options={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -102,6 +117,12 @@ const CustomTabBarOption = ({children, onPress}) => {
         top: -30,
         justifyContent: 'center',
         alignItems: 'center',
+      }}
+      onPress={() => {
+        let options = {}
+        launchCamera(options, (res) => {
+          console.log(res);
+        });
       }}
     >
       <View style={{

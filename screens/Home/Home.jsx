@@ -13,7 +13,7 @@ import {
 import React from 'react';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd.jsx';
 
-const Home = () => {
+const Home = ({navigation}) => {
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView
@@ -46,15 +46,10 @@ const Home = () => {
                 </View>
 
                 <View style={styles.all_posts}>
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
-                    <ItemAdd />
+                    <ItemAdd navigation={navigation}/>
+                    <ItemAdd navigation={navigation}/>
+                    <ItemAdd navigation={navigation}/>
+                    <ItemAdd navigation={navigation}/>
                 </View>
             </ScrollView>
         </SafeAreaView>

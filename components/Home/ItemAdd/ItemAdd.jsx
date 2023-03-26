@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 
-const ItemAdd = () => {
+const ItemAdd = ({navigation}) => {
     return (
-        <TouchableOpacity style={styles.card_wrapper}>
+        <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate({ name: 'Item' })}>
             <View style={styles.left_wrapper}>
                 <Text style={styles.posted_time}>25 mins ago</Text>
                 <Text style={styles.post_title}>Lenovo Laptop</Text>
