@@ -1,10 +1,14 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, {useState} from 'react'
 import Slider from '../../components/ItemPage/Slider/Slider'
+import { Pressable } from '@react-native-material/core'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import ItemCreatedModal from '../../components/shared/Modals/ItemCreatedModal'
 
-export default function ItemPage({navigation}) {
+export default function PreviewPage({navigation, route}) {
+    const [modalVisible, setModalVisible] = useState(false);
+    const {params} = route
+
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView
@@ -12,7 +16,7 @@ export default function ItemPage({navigation}) {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                 {/* Slider */}
-                <Slider navigation={navigation}/>
+                <Slider navigation={navigation} imageArray={params?.uri ? [params?.uri?.uri] : []}/>
 
                 {/* Body */}
                 <View style={styles.main_body_container}>
@@ -41,20 +45,18 @@ export default function ItemPage({navigation}) {
                         </View>
                     </View>
 
-                    {/* Posted <By></By> */}
-                    <View style={styles.wrap_coloumn}>
-                        <View style={styles.wrap_heading}>
-                            <FontAwesome name='user' style={{color: '#6200EE', fontSize: 16}}/>
-                            <Text style={styles.para_heading}>Posted By</Text>
-                        </View>
-
-                        {/*  */}
-                        <View style={styles.wrap_text}>
-                            <Text style={styles.para_content_bold}>Rishabh Jain</Text>
-                            <Text style={styles.para_content}>BT19CSE131</Text>
-                        </View>
-                    </View>
+                    {/* Button */}
+                    <Pressable
+                        style={styles.button}
+                        onPress={() => setModalVisible(true)}
+                    >
+                        <Text style={styles.button_text}>
+                            Post
+                        </Text>
+                    </Pressable>
                 </View>
+
+                {modalVisible && <ItemCreatedModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
 
             </ScrollView>
         </SafeAreaView>
@@ -145,6 +147,22 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4
+        gap: 2,
     },
+    button:{
+        borderRadius: 64,
+        width: 'auto',
+        backgroundColor: '#6200EE',
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    button_text:{
+        color: '#FFF',
+        fontSize: 14,
+        fontWeight: '500',
+        lineHeight: 21
+    }
 })

@@ -29,7 +29,7 @@ const Home = ({navigation}) => {
                         </Text>
                     </View>
 
-                    <TouchableOpacity style={styles.add_button}>
+                    <TouchableOpacity style={styles.add_button} onPress={() => {navigation.navigate({name: 'CreateItem'})}}>
                         <Image source={require('../../assets/add_post.png')} resizeMode='contain' />
                         {/* <Icon name='Add' /> */}
                     </TouchableOpacity>

@@ -8,7 +8,7 @@ const images = new Array(6).fill(
     'https://images.unsplash.com/photo-1556740749-887f6717d7e4',
 );
 
-const Slider = ({navigation}) => {
+const Slider = ({navigation, imageArray}) => {
     const scrollX = useRef(new Animated.Value(0)).current;
     const {width: windowWidth} = useWindowDimensions();
 
@@ -37,18 +37,49 @@ const Slider = ({navigation}) => {
                 scrollEventThrottle={1}
                 style={{width: windowWidth-40, height: 250}}
             >
-                {images.map((image, imageIndex) => {
-                    return (
-                        <View style={{width: windowWidth-40, height: 250}} key={imageIndex}>
-                            <ImageBackground source={{uri: image}} style={styles.card}>
-                            </ImageBackground>
-                        </View>
-                    )
-                })}
+                {imageArray?.length > 0 ?
+                    imageArray.map((image, imageIndex) => {
+                        return (
+                            <View style={{width: windowWidth-40, height: 250}} key={imageIndex}>
+                                <ImageBackground source={{uri: image}} style={styles.card}>
+                                </ImageBackground>
+                            </View>
+                        )
+                    })
+                :
+                    images.map((image, imageIndex) => {
+                        return (
+                            <View style={{width: windowWidth-40, height: 250}} key={imageIndex}>
+                                <ImageBackground source={{uri: image}} style={styles.card}>
+                                </ImageBackground>
+                            </View>
+                        )
+                    })
+                }
             </ScrollView>
 
             <View style={styles.indicatorContainer}>
-                {images.map((image, imageIndex) => {
+                {imageArray?.length > 0 ?
+                    imageArray.map((image, imageIndex) => {
+                        const width = scrollX.interpolate({
+                                inputRange: [
+                                    windowWidth * (imageIndex - 1),
+                                    windowWidth * imageIndex,
+                                    windowWidth * (imageIndex + 1),
+                                ],
+                                outputRange: [8, 16, 8],
+                                extrapolate: 'clamp',
+                            });
+
+                        return (
+                            <Animated.View
+                                key={imageIndex}
+                                style={[styles.normalDot, {width}]}
+                            />
+                        );
+                    })
+                :
+                images.map((image, imageIndex) => {
                     const width = scrollX.interpolate({
                             inputRange: [
                                 windowWidth * (imageIndex - 1),
