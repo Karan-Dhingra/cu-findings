@@ -1,18 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 
-const ItemAdd = ({navigation}) => {
+const ItemAdd = ({navigation, add}) => {
     return (
-        <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate({ name: 'Item' })}>
+        <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', add)}>
             <View style={styles.left_wrapper}>
-                <Text style={styles.posted_time}>25 mins ago</Text>
-                <Text style={styles.post_title}>Lenovo Laptop</Text>
-                <Text style={styles.post_description}>Black Lenovo Legion laptop is found at seminar Hall...</Text>
+                <Text style={styles.posted_time}>{add?.timeLastSeen}</Text>
+                <Text style={styles.post_title}>{add?.title}</Text>
+                <Text style={styles.post_description}>{add?.description}</Text>
                 <Text style={styles.post_claims}>No claims</Text>
             </View>
-            <View style={styles.right_wrapper}>
-                <Image source={require('../../../assets/dummy.png')} resizeMode='contain'/>
-            </View>
+            <ImageBackground source={{uri: add?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>
         </TouchableOpacity>
     );
 }

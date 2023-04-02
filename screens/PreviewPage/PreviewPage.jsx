@@ -4,10 +4,19 @@ import Slider from '../../components/ItemPage/Slider/Slider'
 import { Pressable } from '@react-native-material/core'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ItemCreatedModal from '../../components/shared/Modals/ItemCreatedModal'
+import { useDispatch, useSelector } from 'react-redux';
+import { createAddAction } from '../../redux/actions/UserAction'
 
 export default function PreviewPage({navigation, route}) {
+    const dispatch = useDispatch()
     const [modalVisible, setModalVisible] = useState(false);
     const {params} = route
+    const {loading} = useSelector((state) => state.createAddReducer)
+
+    const createAdd = () =>{
+        // item
+        dispatch(createAddAction(params?.add, 'FOUND', setModalVisible))
+    }
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -22,14 +31,14 @@ export default function PreviewPage({navigation, route}) {
                 <View style={styles.main_body_container}>
                     {/* Top Body */}
                     <View style={styles.wrap_coloumn_time}>
-                        <Text style={styles.created_at}>25 mins ago</Text>
-                        <Text style={styles.heading}>Lenovo Laptop</Text>
+                        <Text style={styles.created_at}>{params?.add?.timeLastSeen}</Text>
+                        <Text style={styles.heading}>{params?.add?.title}</Text>
                     </View>
 
                     {/* Description */}
                     <View style={styles.wrap_coloumn}>
                         <Text style={styles.para_heading}>Description</Text>
-                        <Text style={styles.para_content}>Black Lenovo Legion laptop is found at seminar Hall. It has a Github stcker on it</Text>
+                        <Text style={styles.para_content}>{params?.add?.description}</Text>
                     </View>
 
                     {/* Where To Find */}
@@ -41,23 +50,28 @@ export default function PreviewPage({navigation, route}) {
 
                         {/*  */}
                         <View style={styles.wrap_text}>
-                            <Text style={styles.para_content}>Boys Hostel Gate 3 security check area</Text>
+                            <Text style={styles.para_content}>{params?.add?.location}</Text>
                         </View>
                     </View>
 
                     {/* Button */}
                     <Pressable
                         style={styles.button}
-                        onPress={() => setModalVisible(true)}
+                        disabled={loading}
+                        onPress={() => createAdd()}
                     >
                         <Text style={styles.button_text}>
-                            Post
+                            {loading? 'Posting...' : 'Post'}
                         </Text>
                     </Pressable>
                 </View>
 
-                {modalVisible && <ItemCreatedModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
-
+                {modalVisible && <ItemCreatedModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    text={'You just helped someone find their lost item.'}
+                    navigation={navigation}
+                />}
             </ScrollView>
         </SafeAreaView>
     )

@@ -10,9 +10,9 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd.jsx';
-import { getRaffles } from '../../redux/actions/UserAction.js';
+import { getAllAds } from '../../redux/actions/UserAction.js';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Home = ({navigation}) => {
@@ -21,7 +21,7 @@ const Home = ({navigation}) => {
 
     useEffect(() => {
         const fetch = async() => {
-            dispatch(getRaffles())
+            dispatch(getAllAds())
         }
 
         fetch()

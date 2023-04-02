@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable,Image, View, TouchableOpacity } from 'react-native';
 
-const ItemCreatedModal = ({modalVisible, setModalVisible}) => {
+const ItemCreatedModal = ({modalVisible, setModalVisible, text='You just helped someone find their lost item.', navigation}) => {
     return (
         <Modal
             animationType="slide"
@@ -17,10 +17,13 @@ const ItemCreatedModal = ({modalVisible, setModalVisible}) => {
                     <View style={styles.modalView}>
                         <Image source={require('../../../assets/good_job.png')} />
                         <Text style={styles.modalTextHeading}>Good Job</Text>
-                        <Text style={styles.modalText}>You just helped someone find their lost item.</Text>
+                        <Text style={styles.modalText}>{text}</Text>
                         <Pressable
                             style={styles.button}
-                            onPress={() => setModalVisible(false)}
+                            onPress={() => {
+                                setModalVisible(false)
+                                navigation.replace('Home')
+                            }}
                         >
                             <Text style={styles.button_text}>
                                 OK

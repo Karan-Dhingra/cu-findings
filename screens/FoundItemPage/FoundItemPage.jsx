@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon, ImageBackground } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const FoundItemPage = ({navigation, route}) => {
     const {params} = route
+    const [item, setItem] = useState({
+        title: '',
+        itemImage: 'https://th.bing.com/th/id/OIP.AHZKQ-n2OvjZG4wygtFcFwHaJ8?pid=ImgDet&rs=1',
+        description: '',
+        location: '',
+        timeLastSeen: '',
+    })
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -13,7 +20,7 @@ const FoundItemPage = ({navigation, route}) => {
                 showsVerticalScrollIndicator={false}>
                     {/* Close Button */}
                     <View>
-                        <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.goBack()}}>
+                        <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
                             <MaterialIcons name='close' style={{color: 'black', fontSize: 24}}/>
                         </Pressable>
                     </View>
@@ -22,7 +29,7 @@ const FoundItemPage = ({navigation, route}) => {
                     <ImageBackground style={styles.image_background} source={{uri: params ? params?.uri?.uri : null}}></ImageBackground>
 
                     {/* Next Button */}
-                    <Pressable style={styles.next_button} onPress={() => {navigation.navigate(`PreviewItemPage`, {uri: params?.uri})}}>
+                    <Pressable style={styles.next_button} onPress={() => {navigation.navigate(`PreviewItemPage`, {uri: params?.uri, add:item})}}>
                         <Text style={styles.next_text}>Next</Text>
                         <MaterialIcons name='arrow-forward-ios' style={{color: '#6200EA', fontSize: 14}}/>
                     </Pressable>
@@ -30,9 +37,10 @@ const FoundItemPage = ({navigation, route}) => {
                     {/* Form */}
                     <View style={styles.form}>
                         <View style={styles.input_wrapper}>
-                            <Input placeholder={'Name of the item*'}/>
-                            <Input placeholder={'Location for collecting item*'} />
-                            <Input placeholder={'Describe about found item*'} />
+                            <Input placeholder={'Name of the item*'} value={item?.title} setItem={(value) => {setItem((state) => ({...state, title: value}))}}/>
+                            <Input placeholder={'Location for collecting item*'} value={item?.location} setItem={(value) => {setItem((state) => ({...state, location: value}))}}/>
+                            <Input placeholder={'Describe about found item*'} value={item?.description} setItem={(value) => {setItem((state) => ({...state, description: value}))}}/>
+                            <Input placeholder={'Seen at*'} value={item?.timeLastSeen} setItem={(value) => {setItem((state) => ({...state, timeLastSeen: value}))}}/>
                         </View>
                     </View>
             </ScrollView>
@@ -40,8 +48,8 @@ const FoundItemPage = ({navigation, route}) => {
     );
 }
 
-const Input = ({placeholder}) => {
-    return <TextInput placeholder={placeholder} style={styles.input}/>
+const Input = ({placeholder, value, setItem}) => {
+    return <TextInput placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setItem(value)}/>
 }
 
 const styles = StyleSheet.create({

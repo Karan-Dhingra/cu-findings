@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { useDispatch, useSelector } from 'react-redux';
+import { createAddAction } from '../../redux/actions/UserAction';
+import ItemCreatedModal from '../../components/shared/Modals/ItemCreatedModal';
 
 const CreateItem = ({navigation}) => {
+    const dispatch = useDispatch()
+    const [modalVisible, setModalVisible] = useState(false);
+    const [item, setItem] = useState({
+        title: '',
+        itemImage: 'https://static.toiimg.com/photo/81328406.cms',
+        description: '',
+        location: '',
+        timeLastSeen: '',
+    })
+    const {loading} = useSelector((state) => state.createAddReducer)
+
+    const createAdd = () =>{
+        // item
+        dispatch(createAddAction(item, 'LOST', setModalVisible))
+    }
+
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView
@@ -11,7 +30,7 @@ const CreateItem = ({navigation}) => {
                 showsVerticalScrollIndicator={false}>
                     {/* Back Button */}
                     <View>
-                        <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.goBack()}}>
+                        <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
                             <MaterialIcons name='arrow-back-ios' style={{color: 'black', fontSize: 24}}/>
                         </Pressable>
                     </View>
@@ -19,8 +38,8 @@ const CreateItem = ({navigation}) => {
                     {/* Form */}
                     <View style={styles.form}>
                         <View style={styles.input_wrapper}>
-                            <Input placeholder={'Name of the item*'}/>
-                            <Input placeholder={'Describe your lost item*'} />
+                            <Input placeholder={'Name of the item*'} value={item?.title} setItem={(value) => {setItem((state) => ({...state, title: value}))}}/>
+                            <Input placeholder={'Describe your lost item*'} value={item?.description} setItem={(value) => {setItem((state) => ({...state, description: value}))}}/>
                         </View>
 
                         <View style={styles.input_wrapper}>
@@ -28,8 +47,8 @@ const CreateItem = ({navigation}) => {
                                 <Text style={styles.heading}>Add Additional Info</Text>
                             </View>
 
-                            <Input placeholder={'Place last spotted'} />
-                            <Input placeholder={'Time last seen'} />
+                            <Input placeholder={'Place last spotted'} value={item?.location} setItem={(value) => {setItem((state) => ({...state, location: value}))}}/>
+                            <Input placeholder={'Time last seen'} value={item?.timeLastSeen} setItem={(value) => {setItem((state) => ({...state, timeLastSeen: value}))}}/>
                         </View>
 
                         <View style={styles.upload_image_wrapper}>
@@ -39,19 +58,29 @@ const CreateItem = ({navigation}) => {
 
                         <Pressable
                             style={styles.button}
+                            disabled={loading}
+                            onPress={() => {
+                                createAdd()
+                            }}
                         >
                             <Text style={styles.button_text}>
-                                Generate Lost item Ad
+                                {loading ? 'Generating...' : 'Generate Lost item Ad'}
                             </Text>
                         </Pressable>
                     </View>
+                {modalVisible && <ItemCreatedModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    text={'Stay Tuned! You will be informed if someone founds.'}
+                    navigation={navigation}
+                />}
             </ScrollView>
         </SafeAreaView>
     );
 }
 
-const Input = () => {
-    return <TextInput placeholder='Place last spotted' style={styles.input}/>
+const Input = ({placeholder, value, setItem}) => {
+    return <TextInput placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setItem(value)}/>
 }
 
 const styles = StyleSheet.create({

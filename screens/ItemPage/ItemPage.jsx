@@ -4,7 +4,10 @@ import Slider from '../../components/ItemPage/Slider/Slider'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-export default function ItemPage({navigation}) {
+export default function ItemPage({navigation, route}) {
+    const {params: add} = route
+    console.log('ADD', add)
+
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView
@@ -12,20 +15,20 @@ export default function ItemPage({navigation}) {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                 {/* Slider */}
-                <Slider navigation={navigation}/>
+                <Slider navigation={navigation} imageArray={[add?.itemImage]}/>
 
                 {/* Body */}
                 <View style={styles.main_body_container}>
                     {/* Top Body */}
                     <View style={styles.wrap_coloumn_time}>
                         <Text style={styles.created_at}>25 mins ago</Text>
-                        <Text style={styles.heading}>Lenovo Laptop</Text>
+                        <Text style={styles.heading}>{add?.title}</Text>
                     </View>
 
                     {/* Description */}
                     <View style={styles.wrap_coloumn}>
                         <Text style={styles.para_heading}>Description</Text>
-                        <Text style={styles.para_content}>Black Lenovo Legion laptop is found at seminar Hall. It has a Github stcker on it</Text>
+                        <Text style={styles.para_content}>{add?.description}</Text>
                     </View>
 
                     {/* Where To Find */}
@@ -37,7 +40,7 @@ export default function ItemPage({navigation}) {
 
                         {/*  */}
                         <View style={styles.wrap_text}>
-                            <Text style={styles.para_content}>Boys Hostel Gate 3 security check area</Text>
+                            <Text style={styles.para_content}>{add?.location}</Text>
                         </View>
                     </View>
 
@@ -50,7 +53,7 @@ export default function ItemPage({navigation}) {
 
                         {/*  */}
                         <View style={styles.wrap_text}>
-                            <Text style={styles.para_content_bold}>Rishabh Jain</Text>
+                            <Text style={styles.para_content_bold}>{add?.postedByUserName}</Text>
                             <Text style={styles.para_content}>BT19CSE131</Text>
                         </View>
                     </View>
