@@ -12,8 +12,21 @@ import {
 } from 'react-native';
 import React from 'react';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd.jsx';
+import { getRaffles } from '../../redux/actions/UserAction.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Home = ({navigation}) => {
+    const dispatch = useDispatch()
+    const {loading, allAds} = useSelector((state) => state.fetchAllAdsReducer)
+
+    useEffect(() => {
+        const fetch = async() => {
+            dispatch(getRaffles())
+        }
+
+        fetch()
+    }, [])
+
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView
@@ -46,10 +59,13 @@ const Home = ({navigation}) => {
                 </View>
 
                 <View style={styles.all_posts}>
-                    <ItemAdd navigation={navigation}/>
-                    <ItemAdd navigation={navigation}/>
-                    <ItemAdd navigation={navigation}/>
-                    <ItemAdd navigation={navigation}/>
+                    {
+                        loading ? <Text>Loading...</Text>
+                        :
+                        allAds.map((add, key) => (
+                            <ItemAdd navigation={navigation} add={add} key={key}/>
+                        ))
+                    }
                 </View>
             </ScrollView>
         </SafeAreaView>
