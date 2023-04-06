@@ -10,27 +10,44 @@ import Profile from './screens/Profile/Profile.jsx';
 import CreateItem from './screens/CreateItem/CreateItem.jsx';
 import FoundItemPage from './screens/FoundItemPage/FoundItemPage.jsx';
 import PreviewPage from './screens/PreviewPage/PreviewPage';
+import GlobalSearch from './screens/GlobalSearch/GlobalSearch.jsx';
+import LoginPage from './screens/Auth/LoginPage/LoginPage.jsx';
+import RegisterPage from './screens/Auth/RegisterPage/RegisterPage.jsx';
+import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
+const LoginScreen = () =>{
+  return(
+    <Stack.Navigator
+      initialRouteName='LandingPage'
+    >
+      <Stack.Screen name="LandingPage" options={{headerShown: false}} component={DefaultPage} />
+      <Stack.Screen name="SignIn" options={{headerShown: false}} component={LoginPage} />
+      <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterPage} />
+    </Stack.Navigator>
+  )
+}
+
 const HomeScreen = () =>{
   return(
-    <Stack.Navigator >
+    <Stack.Navigator
+      initialRouteName='Home'
+    >
       <Stack.Screen name="Home" options={{headerShown: false}} component={Home} />
       <Stack.Screen name="CreateItem" options={{headerShown: false}} component={CreateItem} />
       <Stack.Screen name="FoundItemPage" options={{headerShown: false}} component={FoundItemPage} />
       <Stack.Screen name="PreviewItemPage" options={{headerShown: false}} component={PreviewPage} />
+      <Stack.Screen name="GlobalSearch" options={{headerShown: false}} component={GlobalSearch} />
       <Stack.Screen name="Item" options={{headerShown: false}} component={ItemPage} />
     </Stack.Navigator>
   )
 }
 
-function App() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
+const BottomNavigationScreen = () => {
+  <Tab.Navigator
         initialRouteName='HomeScreen'
         screenOptions={{
           showLabel: false,
@@ -73,20 +90,40 @@ function App() {
           options={{
             headerShown: false,
             tabBarShowLabel: false,
-            tabBarIcon: ({focused}) => (
-                <Image
-                  source={require('./assets/camera_alt.png')}
-                  resizeMode='contain'
-                  style={{
-                    width: 25,
-                    height: 25,
-                    // tintColor: focused ? '#e32f45' : '#748c94'
-                  }}
-                />
-            ),
-            tabBarButton: (props) => (
-              <CustomTabBarOption {...props}/>
-            )
+            tabBarIcon: ({focused}) => {
+              if(focused) {
+                return (
+                  <Image
+                    source={require('./assets/camera_alt.png')}
+                    resizeMode='contain'
+                    style={{
+                      width: 25,
+                      height: 25,
+                      // tintColor: focused ? '#e32f45' : '#748c94'
+                    }}
+                  />
+                )
+              }else{
+                return (
+                  <Image
+                    source={require('./assets/Home.png')}
+                    resizeMode='contain'
+                    style={{
+                      width: 25,
+                      height: 25,
+                      // tintColor: focused ? '#e32f45' : '#748c94'
+                    }}
+                  />
+                )
+              }
+            },
+            tabBarButton: (props) => {
+              if(props.accessibilityState.selected)
+                return (
+                <CustomTabBarOption {...props}/>
+              )
+              else return <NormalTabBatOption {...props}/>
+            }
           }}
         />
 
@@ -111,9 +148,34 @@ function App() {
             )
           }}
         />
-      </Tab.Navigator>
+    </Tab.Navigator>
+}
+
+function App() {
+  return (
+    <NavigationContainer>
+      {true ?
+        <LoginScreen />
+        :
+        <BottomNavigationScreen />
+      }
     </NavigationContainer>
   );
+}
+
+const NormalTabBatOption = ({children}) => {
+  const navigation = useNavigation();
+  return(
+    <TouchableOpacity
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onPress={() => navigation.navigate('HomeScreen')}
+    >
+      {children}
+    </TouchableOpacity>
+  )
 }
 
 const CustomTabBarOption = ({children}) => {

@@ -52,7 +52,7 @@ const Home = ({navigation}) => {
                 <View style={styles.search_field}>
                     <Text style={styles.search_heading}>Search lost Items</Text>
 
-                    <TouchableOpacity style={styles.add_button}>
+                    <TouchableOpacity style={styles.add_button} onPress={() => navigation.navigate('GlobalSearch')}>
                         <Image source={require('../../assets/search.png')} resizeMode='contain' />
                         {/* <Icon name='Add' /> */}
                     </TouchableOpacity>
