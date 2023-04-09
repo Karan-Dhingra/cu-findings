@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import axios from "axios";
 import { BACKEND_URL, ErrorMessage } from "../../constants"
 import {
@@ -10,7 +11,93 @@ import {
     CREATE_ADD_REQUEST,
     CREATE_ADD_SUCCESS,
     CREATE_ADD_FAIL,
+    USER_REGISTER_REQUEST,
+    USER_REGISTER_SUCCESS,
+    USER_LOGIN_REQUEST,
+    USER_REGISTER_FAIL,
+    USER_LOGIN_SUCCESS,
+    USER_LOGIN_FAIL,
 } from '../constants/UserConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const register = (user) => async(dispatch) => {
+    try {
+        dispatch({ type: USER_REGISTER_REQUEST })
+        const { data } = await axios.post(
+            `${BACKEND_URL}/auth/register/`,
+            {
+                email: user.email,
+                password: user.password,
+                confirmPassword: user.confirmPassword,
+                uid: user.uid,
+                officialEmailId: user.officialEmailId,
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName
+            }
+        )
+        if (data && data.status === 200) {
+            let arr = data.user || {}
+            dispatch({ type: USER_REGISTER_SUCCESS, payload: arr })
+        } else
+            dispatch({
+                type: USER_REGISTER_FAIL,
+                payload: data.msg,
+            })
+    } catch (error) {
+        dispatch({
+            type: USER_REGISTER_FAIL,
+            payload: ErrorMessage(error),
+        })
+    }
+}
+
+export const login = (user) => async(dispatch) => {
+    try{
+        dispatch({
+            type: USER_LOGIN_REQUEST
+        })
+
+        const { data } = await axios.post(
+            `${BACKEND_URL}/auth/login`,
+            {
+                email: user.email , password: user.password
+            },
+        )
+
+        const salt = await bcrypt.genSalt(10)
+
+        const verificationHash =
+            await bcrypt.hashSync(
+                `${
+                    process.env
+                        .REACT_APP_KURAMA_VERIFICATION_HASH
+                } ${data.accessToken.substring(
+                    0,
+                    15
+                )}`,
+                salt
+            )
+        if (data.status === 200) {
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: data,
+                verificationHash,
+            })
+
+            AsyncStorage.setItem('user', data)
+            AsyncStorage.setItem('verificationHash', data)
+        } else {
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload:
+                    data.msg || 'Something Failed...',
+            })
+        }
+    }catch(err){
+
+    }
+}
 
 export const getAddById = (id, setAdd) => async (dispatch) => {
     try {

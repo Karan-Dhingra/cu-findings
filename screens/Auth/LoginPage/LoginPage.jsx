@@ -1,34 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const LoginPage = ({navigation}) => {
-    const _retrieveData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('TASKS');
-            if (value !== null) {
-            // We have data!!
-            console.log(value);
-            }
-        } catch (error) {
-            // Error retrieving data
-        }
-    };
+    // const _retrieveData = async () => {
+    //     try {
+    //         const value = await AsyncStorage.getItem('TASKS');
+    //         if (value !== null) {
+    //         // We have data!!
+    //         console.log(value);
+    //         }
+    //     } catch (error) {
+    //         // Error retrieving data
+    //     }
+    // };
 
-    const _storeData = async () => {
-        try {
-            await AsyncStorage.setItem(
-                'TASKS',
-                'I like to save it.',
-            );
-            } catch (error) {
-            // Error saving data
-            }
-    };
-    _retrieveData()
+    // const _storeData = async () => {
+    //     try {
+    //         await AsyncStorage.setItem(
+    //             'TASKS',
+    //             'I like to save it.',
+    //         );
+    //         } catch (error) {
+    //         // Error saving data
+    //         }
+    // };
+    // _retrieveData()
     // console.log(_retrieveData())
+
+    const [user, setUser] = useState({
+        // username: '',
+        officialEmail: '',
+        password: '',
+    })
+
+    const signIn = () => {
+        console.log(user)
+    }
+
     return (
         <SafeAreaView style={styles.body_container}>
             <View>
@@ -41,14 +52,18 @@ const LoginPage = ({navigation}) => {
             <View style={styles.main_container}>
                 <Text style={styles.heading}>Sign in</Text>
                 <View style={styles.text_wrapper}>
-                    <TextInput style={styles.text_input} placeholder={'Username'}/>
-                    <TextInput style={styles.text_input} placeholder={'Institute email'}/>
-                    <TextInput style={styles.text_input} placeholder={'Password'}/>
+                    {/* <TextInput style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}} /> */}
+                    <TextInput style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail} onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}} />
+                    <TextInput style={styles.text_input} placeholder={'Password'} keyboardType={'visible-password'} value={user.password} onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
 
-                    <Pressable style={styles.signIn_btn} onPress={() => _storeData()}>
+                    <Pressable style={styles.signIn_btn} onPress={() => {signIn()}}>
                         <Text style={styles.btn_text}>Sign in</Text>
                     </Pressable>
                 </View>
+
+                {/* {!!error && (
+                <Text style={{ color: "red" }}>{this.state.nameError}</Text>
+                )} */}
             </View>
         </SafeAreaView>
     );
