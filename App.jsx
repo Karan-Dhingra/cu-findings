@@ -14,18 +14,24 @@ import GlobalSearch from './screens/GlobalSearch/GlobalSearch.jsx';
 import LoginPage from './screens/Auth/LoginPage/LoginPage.jsx';
 import RegisterPage from './screens/Auth/RegisterPage/RegisterPage.jsx';
 import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
+import { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
-const LoginScreen = () =>{
+const LoginScreen = ({isLogin, setLogin}) =>{
+  console.log('login', isLogin)
   return(
     <Stack.Navigator
       initialRouteName='LandingPage'
     >
-      <Stack.Screen name="LandingPage" options={{headerShown: false}} component={DefaultPage} />
-      <Stack.Screen name="SignIn" options={{headerShown: false}} component={LoginPage} />
+      <Stack.Screen name="LandingPage" options={{headerShown: false}}>
+        {props => <DefaultPage {...props} setLogin={setLogin} />}
+      </Stack.Screen>
+      <Stack.Screen name="SignIn" options={{headerShown: false}}>
+        {props => <LoginPage {...props} setLogin={setLogin} />}
+      </Stack.Screen>
       <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterPage} />
     </Stack.Navigator>
   )
@@ -46,8 +52,9 @@ const HomeScreen = () =>{
   )
 }
 
-const BottomNavigationScreen = () => {
-  <Tab.Navigator
+const BottomNavigationScreen = ({isLogin, setLogin}) => {
+  return(
+    <Tab.Navigator
         initialRouteName='HomeScreen'
         screenOptions={{
           showLabel: false,
@@ -149,15 +156,17 @@ const BottomNavigationScreen = () => {
           }}
         />
     </Tab.Navigator>
+  )
 }
 
 function App() {
+  const [isLogin, setLogin] = useState(false)
   return (
     <NavigationContainer>
-      {true ?
-        <LoginScreen />
+      {!isLogin ?
+        <LoginScreen isLogin={isLogin} setLogin={setLogin} />
         :
-        <BottomNavigationScreen />
+        <BottomNavigationScreen  isLogin={isLogin} setLogin={setLogin} />
       }
     </NavigationContainer>
   );
@@ -165,11 +174,13 @@ function App() {
 
 const NormalTabBatOption = ({children}) => {
   const navigation = useNavigation();
+  console.log(navigation.navigate)
   return(
     <TouchableOpacity
       style={{
         justifyContent: 'center',
         alignItems: 'center',
+        flex: 1
       }}
       onPress={() => navigation.navigate('HomeScreen')}
     >

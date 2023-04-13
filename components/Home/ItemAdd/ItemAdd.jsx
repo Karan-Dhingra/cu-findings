@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
         borderColor: '#00000026',
         marginTop: 10,
         marginBottom: 10,
-        shadowOffset: {
-            width: 0,
-            height: 10,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.5,
-        elevation: 4,
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 5,
+        // },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.5,
+        // elevation: 2,
         width: '100%',
         flex: 1
     },

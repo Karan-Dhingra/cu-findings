@@ -49,7 +49,7 @@ const FoundItemPage = ({navigation, route}) => {
 }
 
 const Input = ({placeholder, value, setItem}) => {
-    return <TextInput placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setItem(value)}/>
+    return <TextInput placeholderTextColor={'#1111113f'} placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setItem(value)}/>
 }
 
 const styles = StyleSheet.create({
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: 'rgba(44, 0, 103, 0.2)',
         // height: 40
+        color: '#000'
     },
     upload_image_wrapper:{
         display: 'flex',

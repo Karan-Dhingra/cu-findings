@@ -60,7 +60,7 @@ const Home = ({navigation}) => {
 
                 <View style={styles.all_posts}>
                     {
-                        loading ? <Text>Loading...</Text>
+                        loading ? <Text style={{color: '#000'}}>Loading...</Text>
                         :
                         allAds.map((add, key) => (
                             <ItemAdd navigation={navigation} add={add} key={key}/>

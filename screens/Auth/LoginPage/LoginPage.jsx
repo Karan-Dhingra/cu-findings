@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text } from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { login } from '../../../redux/actions/UserAction';
+import { useDispatch, useSelector } from 'react-redux';
 
 
-const LoginPage = ({navigation}) => {
+const LoginPage = ({navigation, setLogin}) => {
+    const dispatch = useDispatch()
+    const {loading, error} = useSelector((state) => state.userLoginReducer)
     // const _retrieveData = async () => {
     //     try {
     //         const value = await AsyncStorage.getItem('TASKS');
@@ -36,8 +40,16 @@ const LoginPage = ({navigation}) => {
         password: '',
     })
 
+    useEffect(() => {
+        // if(error){
+        //     ToastAndroid.show(error, ToastAndroid.SHORT);
+        // }
+    }, [error])
+
     const signIn = () => {
         console.log(user)
+        setLogin(true)
+        // dispatch(login(user))
     }
 
     return (
@@ -53,11 +65,11 @@ const LoginPage = ({navigation}) => {
                 <Text style={styles.heading}>Sign in</Text>
                 <View style={styles.text_wrapper}>
                     {/* <TextInput style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}} /> */}
-                    <TextInput style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail} onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}} />
-                    <TextInput style={styles.text_input} placeholder={'Password'} keyboardType={'visible-password'} value={user.password} onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
+                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail} onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}} />
+                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} secureTextEntry={true} placeholder={'Password'} value={user.password} onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
 
-                    <Pressable style={styles.signIn_btn} onPress={() => {signIn()}}>
-                        <Text style={styles.btn_text}>Sign in</Text>
+                    <Pressable style={styles.signIn_btn} onPress={() => {signIn()}} disabled={loading}>
+                        <Text style={styles.btn_text}>{loading ? 'Signing...' : 'Sign in'}</Text>
                     </Pressable>
                 </View>
 
@@ -102,7 +114,8 @@ const styles = StyleSheet.create({
         padding: 6,
         fontSize: 15,
         fontWeight: '500',
-        width: '100%'
+        width: '100%',
+        color: '#000'
     },
     signIn_btn:{
         backgroundColor: '#6200EE',

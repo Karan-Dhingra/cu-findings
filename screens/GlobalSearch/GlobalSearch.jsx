@@ -24,7 +24,7 @@ const GlobalSearch = ({navigation}) => {
 
                     {/* Search */}
                     <View style={styles.search_wrapper}>
-                        <TextInput placeholder='Search' style={{width: '100%', padding: 0}} />
+                        <TextInput placeholderTextColor={'#1111113f'} placeholder='Search' style={{color: '#000', width: '100%', padding: 0}} />
                     </View>
 
                     {/* Heading */}
@@ -35,7 +35,7 @@ const GlobalSearch = ({navigation}) => {
                     {/* List */}
                     <View style={styles.all_posts}>
                         {
-                            loading ? <Text>Loading...</Text>
+                            loading ? <Text style={{color: '#000'}}>Loading...</Text>
                             :
                             allAds.map((add, key) => (
                                 <ItemAdd navigation={navigation} add={add} key={key}/>

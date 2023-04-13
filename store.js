@@ -1,12 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
-import { fetchAllAdsReducer, createAddReducer } from './redux/reducers/UserReducers';
+import { fetchAllAdsReducer, createAddReducer, userLoginReducer } from './redux/reducers/UserReducers';
 
 const initialState = {}
 
 const reducer = combineReducers({
     fetchAllAdsReducer,
-    createAddReducer
+    createAddReducer,
+    userLoginReducer
 })
 
 export const store = configureStore({

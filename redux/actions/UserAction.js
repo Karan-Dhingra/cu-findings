@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs'
+// import bcrypt from 'bcryptjs'
 import axios from "axios";
 import { BACKEND_URL, ErrorMessage } from "../../constants"
 import {
@@ -61,28 +61,31 @@ export const login = (user) => async(dispatch) => {
         const { data } = await axios.post(
             `${BACKEND_URL}/auth/login`,
             {
-                email: user.email , password: user.password
+                email: user.officialEmail , password: user.password
             },
         )
 
-        const salt = await bcrypt.genSalt(10)
+        console.log(data)
 
-        const verificationHash =
-            await bcrypt.hashSync(
-                `${
-                    process.env
-                        .REACT_APP_KURAMA_VERIFICATION_HASH
-                } ${data.accessToken.substring(
-                    0,
-                    15
-                )}`,
-                salt
-            )
         if (data.status === 200) {
+            // const salt = await bcrypt.genSalt(10)
+
+            // const verificationHash =
+            //     await bcrypt.hashSync(
+            //         `${
+            //             process.env
+            //                 .REACT_APP_KURAMA_VERIFICATION_HASH
+            //         } ${data.accessToken.substring(
+            //             0,
+            //             15
+            //         )}`,
+            //         salt
+            //     )
+
             dispatch({
                 type: USER_LOGIN_SUCCESS,
                 payload: data,
-                verificationHash,
+                verificationHash: "OK",
             })
 
             AsyncStorage.setItem('user', data)
