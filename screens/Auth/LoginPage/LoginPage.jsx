@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text, ToastAndroid } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from '../../../redux/actions/UserAction';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -41,15 +41,22 @@ const LoginPage = ({navigation, setLogin}) => {
     })
 
     useEffect(() => {
-        // if(error){
-        //     ToastAndroid.show(error, ToastAndroid.SHORT);
-        // }
+        if(error){
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        }
     }, [error])
 
     const signIn = () => {
         console.log(user)
-        setLogin(true)
-        // dispatch(login(user))
+        if(!user.officialEmail){
+            ToastAndroid.show('Email is Required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.password){
+            ToastAndroid.show('Password is Required!', ToastAndroid.SHORT);
+            return
+        }
+        // setLogin(true)
+        dispatch(login(user))
     }
 
     return (
@@ -113,7 +120,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         padding: 6,
         fontSize: 15,
-        fontWeight: '500',
+        fontWeight: '400',
         width: '100%',
         color: '#000'
     },

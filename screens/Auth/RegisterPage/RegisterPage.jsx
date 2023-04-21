@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text } from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text, ToastAndroid } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerAction } from '../../../redux/actions/UserAction';
 
 const RegisterPage = ({navigation}) => {
+    const dispatch = useDispatch()
+    const {error, loading, data} = useSelector((state) => state.userRegisterReducer)
     const [user, setUser] = useState({
         username: '',
         firstName: '',
@@ -13,9 +17,33 @@ const RegisterPage = ({navigation}) => {
         confirmPassword: '',
     })
 
+    useEffect(() => {
+        if(error){
+            ToastAndroid.show(error, ToastAndroid.SHORT);
+        }
+    }, [error])
+
     const register = () => {
-        if(user.password !== user.confirmPassword) return
-        console.log(user)
+        if(!user.username){
+            ToastAndroid.show('Username is required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.firstName || !user.lastName) {
+            ToastAndroid.show('First and Last Name is required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.personalEmail) {
+            ToastAndroid.show('Personal Email is required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.officialEmail) {
+            ToastAndroid.show('Official Email is required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.password) {
+            ToastAndroid.show('Password is required!', ToastAndroid.SHORT);
+            return
+        }else if(user.password !== user.confirmPassword) {
+            ToastAndroid.show('Password doesnt matched!', ToastAndroid.SHORT);
+            return
+        }
+        dispatch(registerAction(user, navigation, ToastAndroid))
     }
 
     return (
@@ -37,11 +65,11 @@ const RegisterPage = ({navigation}) => {
                     <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}}/>
                     <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Personal email'} keyboardType={'email-address'} value={user.personalEmail}  onChangeText={(value) => {setUser((state) => ({...state, personalEmail: value}))}}/>
                     <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail}  onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Password'} keyboardType={'visible-password'} value={user.password}  onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Confirm Password'} keyboardType={'visible-password'} value={user.confirmPassword}  onChangeText={(value) => {setUser((state) => ({...state, confirmPassword: value}))}}/>
+                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Password'} secureTextEntry={true} value={user.password}  onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
+                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Confirm Password'} secureTextEntry={true} value={user.confirmPassword}  onChangeText={(value) => {setUser((state) => ({...state, confirmPassword: value}))}}/>
 
                     <Pressable style={styles.signIn_btn} onPress={() => register()}>
-                        <Text style={styles.btn_text}>Register</Text>
+                        <Text style={styles.btn_text}>{loading ? 'Registering...' : 'Register'}</Text>
                     </Pressable>
                 </View>
             </View>
@@ -81,7 +109,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         padding: 8,
         fontSize: 15,
-        fontWeight: '500',
+        fontWeight: '400',
         width: '100%'
     },
     text_input_row:{
@@ -89,7 +117,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         padding: 8,
         fontSize: 15,
-        fontWeight: '500',
+        fontWeight: '400',
         width: '45%',
         color: '#000'
     },

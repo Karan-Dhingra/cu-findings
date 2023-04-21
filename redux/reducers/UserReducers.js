@@ -112,7 +112,7 @@ export const userLoginReducer = (state = userState, action) => {
             return {
                 loading: false,
                 isLogin: action.payload ? true : false,
-                userInfo: action.payload ? action.payload.user : action.payload,
+                userInfo: action.payload ? action.payload?.user : action.payload,
                 accessToken: action.payload.accessToken,
                 verificationHash: action.verificationHash,
                 walletNotFound: false,

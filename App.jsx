@@ -15,22 +15,25 @@ import LoginPage from './screens/Auth/LoginPage/LoginPage.jsx';
 import RegisterPage from './screens/Auth/RegisterPage/RegisterPage.jsx';
 import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
-const LoginScreen = ({isLogin, setLogin}) =>{
-  console.log('login', isLogin)
+const LoginScreen = () =>{
+  const {isLogin} = useSelector((state) => state.userLoginReducer)
+  console.log(isLogin)
+
   return(
     <Stack.Navigator
       initialRouteName='LandingPage'
     >
       <Stack.Screen name="LandingPage" options={{headerShown: false}}>
-        {props => <DefaultPage {...props} setLogin={setLogin} />}
+        {props => <DefaultPage {...props}/>}
       </Stack.Screen>
       <Stack.Screen name="SignIn" options={{headerShown: false}}>
-        {props => <LoginPage {...props} setLogin={setLogin} />}
+        {props => <LoginPage {...props}/>}
       </Stack.Screen>
       <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterPage} />
     </Stack.Navigator>
@@ -52,7 +55,9 @@ const HomeScreen = () =>{
   )
 }
 
-const BottomNavigationScreen = ({isLogin, setLogin}) => {
+const BottomNavigationScreen = () => {
+  const {isLogin} = useSelector((state) => state.userLoginReducer)
+
   return(
     <Tab.Navigator
         initialRouteName='HomeScreen'
@@ -160,13 +165,14 @@ const BottomNavigationScreen = ({isLogin, setLogin}) => {
 }
 
 function App() {
-  const [isLogin, setLogin] = useState(false)
+  const {isLogin} = useSelector((state) => state.userLoginReducer)
+
   return (
     <NavigationContainer>
       {!isLogin ?
-        <LoginScreen isLogin={isLogin} setLogin={setLogin} />
+        <LoginScreen isLogin={isLogin}/>
         :
-        <BottomNavigationScreen  isLogin={isLogin} setLogin={setLogin} />
+        <BottomNavigationScreen  isLogin={isLogin}/>
       }
     </NavigationContainer>
   );

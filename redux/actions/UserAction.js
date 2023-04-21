@@ -1,4 +1,4 @@
-// import bcrypt from 'bcryptjs'
+// import BcryptReactNative from 'bcrypt-react-native';
 import axios from "axios";
 import { BACKEND_URL, ErrorMessage } from "../../constants"
 import {
@@ -66,18 +66,19 @@ export const uploadToCloudinary = async (uri) => {
     }
 }
 
-export const register = (user) => async(dispatch) => {
+export const registerAction = (user, navigation, ToastAndroid) => async(dispatch) => {
     try {
+        console.log('registerAction', user)
         dispatch({ type: USER_REGISTER_REQUEST })
         const { data } = await axios.post(
-            `${BACKEND_URL}/auth/register/`,
+            `${BACKEND_URL}/auth/register`,
             {
-                email: user.email,
+                email: user.personalEmail,
                 password: user.password,
                 confirmPassword: user.confirmPassword,
-                uid: user.uid,
+                uid: user.officialEmail.trim().split('@')[0].toUpperCase(),
                 officialEmailId: user.officialEmailId,
-                username: user.username,
+                username: user.username.toLowerCase(),
                 firstName: user.firstName,
                 lastName: user.lastName
             }
@@ -85,6 +86,9 @@ export const register = (user) => async(dispatch) => {
         if (data && data.status === 200) {
             let arr = data.user || {}
             dispatch({ type: USER_REGISTER_SUCCESS, payload: arr })
+            console.log(data)
+            navigation.navigate('SignIn')
+            ToastAndroid.show('Registered Successfully!', ToastAndroid.SHORT);
         } else
             dispatch({
                 type: USER_REGISTER_FAIL,
@@ -98,7 +102,7 @@ export const register = (user) => async(dispatch) => {
     }
 }
 
-export const login = (user) => async(dispatch) => {
+export const login = (user, ToastAndroid) => async(dispatch) => {
     try{
         dispatch({
             type: USER_LOGIN_REQUEST
@@ -111,22 +115,21 @@ export const login = (user) => async(dispatch) => {
             },
         )
 
-        console.log(data)
-
         if (data.status === 200) {
-            // const salt = await bcrypt.genSalt(10)
+            // const salt = await BcryptReactNative.getSalt(10)
 
             // const verificationHash =
-            //     await bcrypt.hashSync(
+            //     await BcryptReactNative.hash(
+            //         salt,
             //         `${
-            //             process.env
-            //                 .REACT_APP_KURAMA_VERIFICATION_HASH
+            //             'KARANDHINGA'
             //         } ${data.accessToken.substring(
             //             0,
             //             15
-            //         )}`,
-            //         salt
-            //     )
+            //         )}`
+            //     ).
+
+            //     console.log('SHA', verificationHash)
 
             dispatch({
                 type: USER_LOGIN_SUCCESS,
@@ -134,8 +137,9 @@ export const login = (user) => async(dispatch) => {
                 verificationHash: "OK",
             })
 
-            AsyncStorage.setItem('user', data)
-            AsyncStorage.setItem('verificationHash', data)
+            ToastAndroid.show('Signed In!', ToastAndroid.SHORT);
+            AsyncStorage.setItem('user', JSON.stringify(data))
+            // AsyncStorage.setItem('verificationHash', data)
         } else {
             dispatch({
                 type: USER_LOGIN_FAIL,
