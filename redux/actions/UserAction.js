@@ -20,6 +20,52 @@ import {
 } from '../constants/UserConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const uploadToCloudinary = async (uri) => {
+    try {
+        const type = 'image/jpeg';
+        const name = 'name.jpg';
+        const source = {uri,type,name}
+        const formData = new FormData()
+        formData.append('file', source)
+        formData.append('upload_preset', 'cu_findings')
+        formData.append('cloud_name', 'dognf82sm')
+        // const { data } = await axios.post(
+        //     'https://api.cloudinary.com/v1_1/dognf82sm/auto/upload',
+        //     formData
+        // )
+        // console.log(data)
+
+        // if (data.url) return data.url
+        let urlValue = ''
+
+        let res = await fetch(
+            "https://api.cloudinary.com/v1_1/dognf82sm/auto/upload",
+            {
+                method: "post",
+                mode: "cors",
+                body: formData,
+                headers:{
+                    'Accept': 'application/json',
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            )
+            .then(res=>res.json())
+            .then(data=>{
+                // console.log('url' ,data.url)
+                urlValue = data.url
+                return data.url
+            })
+            .catch(err=>{
+                console.log('err', err)
+            })
+
+            return urlValue
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const register = (user) => async(dispatch) => {
     try {
         dispatch({ type: USER_REGISTER_REQUEST })
@@ -164,18 +210,19 @@ export const getAllAds = (type = 'Ongoing') => async (dispatch) => {
 export const createAddAction = (item, type='LOST', setModalVisible) => async (dispatch) => {
     try {
         dispatch({ type: CREATE_ADD_REQUEST })
-        console.log(item)
+        const  cloudinaryUrl = await uploadToCloudinary(item?.itemImage)
+
         const { data } = await axios.post(
             `${BACKEND_URL}/user/createAdd`,{
                 title: item?.title,
                 description: item?.description,
                 location: item?.location,
                 timeLastSeen: item?.timeLastSeen,
-                itemImage: item?.itemImage,
+                itemImage: cloudinaryUrl,
                 type
             }
         )
-        console.log(setModalVisible)
+        // console.log(setModalVisible)
 
         if (data && data.status === 200) {
             dispatch({ type: CREATE_ADD_SUCCESS, payload: data?.add })

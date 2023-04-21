@@ -6,7 +6,7 @@ const FoundItemPage = ({navigation, route}) => {
     const {params} = route
     const [item, setItem] = useState({
         title: '',
-        itemImage: 'https://th.bing.com/th/id/OIP.AHZKQ-n2OvjZG4wygtFcFwHaJ8?pid=ImgDet&rs=1',
+        itemImage: params?.uri,
         description: '',
         location: '',
         timeLastSeen: '',
@@ -26,7 +26,7 @@ const FoundItemPage = ({navigation, route}) => {
                     </View>
 
                     {/* Image */}
-                    <ImageBackground style={styles.image_background} source={{uri: params ? params?.uri?.uri : null}}></ImageBackground>
+                    <ImageBackground style={styles.image_background} source={{uri: item?.itemImage}}></ImageBackground>
 
                     {/* Next Button */}
                     <Pressable style={styles.next_button} onPress={() => {navigation.navigate(`PreviewItemPage`, {uri: params?.uri, add:item})}}>

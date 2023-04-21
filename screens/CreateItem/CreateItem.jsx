@@ -1,21 +1,43 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon, Alert, ImageBackground, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useDispatch, useSelector } from 'react-redux';
 import { createAddAction } from '../../redux/actions/UserAction';
 import ItemCreatedModal from '../../components/shared/Modals/ItemCreatedModal';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const CreateItem = ({navigation}) => {
     const dispatch = useDispatch()
     const [modalVisible, setModalVisible] = useState(false);
     const [item, setItem] = useState({
         title: '',
-        itemImage: 'https://static.toiimg.com/photo/81328406.cms',
+        itemImage: null,
         description: '',
         location: '',
         timeLastSeen: '',
     })
     const {loading} = useSelector((state) => state.createAddReducer)
+
+    const selectImage = async() => {
+        const options = {
+            title: 'Select Photo',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        const result = await launchImageLibrary(options)
+
+        if (!result?.didCancel) {
+            console.log('result', result)
+            setItem((state) => ({...state, itemImage: result?.assets[0]?.uri}))
+        } else {
+            Alert.alert('You did not select any image.')
+        }
+    }
+
+    // console.log('40 ' ,item?.itemImage)
 
     const createAdd = () =>{
         // item
@@ -52,8 +74,16 @@ const CreateItem = ({navigation}) => {
                         </View>
 
                         <View style={styles.upload_image_wrapper}>
-                            <View style={styles.upload_image}></View>
+                            {
+                                item?.itemImage ? <Pressable onPress={() => {selectImage()}} style={styles.item_image}>
+                                    <Image source={{uri: item?.itemImage}} style={{width: '100%', height: '100%'}} />
+                                </Pressable>
+                                : <Pressable onPress={() => {selectImage()}} style={styles.upload_image}></Pressable>
+                            }
                         </View>
+                        {/* <View style={styles.upload_image_wrapper}>
+                            <Pressable onPress={() => {selectImage()}} style={styles.upload_image}></Pressable>
+                        </View> */}
                         {/* <Button>Generate Lost item Ad</Button> */}
 
                         <Pressable
@@ -131,6 +161,13 @@ const styles = StyleSheet.create({
         width: 300,
         borderRadius: 5,
         backgroundColor: '#cccccc6a'
+    },
+    item_image:{
+        height: 200,
+        width: 300,
+        borderRadius: 5,
+        backgroundColor: '#cccccc6a',
+        resizeMode: 'contain',
     },
     button:{
         borderRadius: 64,

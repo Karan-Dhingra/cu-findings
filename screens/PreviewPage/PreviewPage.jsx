@@ -25,7 +25,7 @@ export default function PreviewPage({navigation, route}) {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                 {/* Slider */}
-                <Slider navigation={navigation} imageArray={params?.uri ? [params?.uri?.uri] : []}/>
+                <Slider navigation={navigation} imageArray={params?.uri ? [params?.uri] : []}/>
 
                 {/* Body */}
                 <View style={styles.main_body_container}>

@@ -210,14 +210,27 @@ const CustomTabBarOption = ({children}) => {
         //     return;
         // }
         let options = {}
-        launchCamera(options, (res) => {
-          console.log(res);
-          if(!res.didCancel && res.assets){
-            navigation.navigate('FoundItemPage', {uri: res.assets[0]})
-          }else if(res.didCancel){
-            navigation.navigate('Item', {uri: res.assets[0]})
-          }
-        });
+        const result = await launchCamera(options)
+        console.log(result)
+
+        if (!result?.didCancel) {
+          const uri = result?.assets[0]?.uri
+            console.log('result', result)
+            navigation.navigate('FoundItemPage', {uri})
+        } else {
+          // navigation.navigate('Item', {uri: uri})
+          console.log('canceledd...')
+        }
+
+        // launchCamera(options, (res) => {
+        //   console.log(res.assets[0].uri);
+          // if(!res.didCancel && res.assets){
+          //   navigation.navigate('FoundItemPage', {uri: res.assets[0]?.uri})
+          // }else if(res.didCancel){
+          //   navigation.navigate('Item', {uri: res.assets[0]?.uri})
+          // }
+        // });
+
       }}
     >
       <View style={{
