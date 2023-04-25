@@ -16,6 +16,7 @@ import RegisterPage from './screens/Auth/RegisterPage/RegisterPage.jsx';
 import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

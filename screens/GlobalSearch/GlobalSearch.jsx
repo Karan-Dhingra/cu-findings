@@ -1,11 +1,20 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, TextInput } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { globalSearch } from '../../redux/actions/PublicAction';
 
 const GlobalSearch = ({navigation}) => {
-    const {loading, allAds} = useSelector((state) => state.fetchAllAdsReducer)
+    const dispatch = useDispatch()
+    const {loading, data} = useSelector((state) => state.globalSearchReducer)
+    const [searchText, setSearchText] = useState('')
+
+    useEffect(() => {
+        dispatch(globalSearch(searchText))
+    }, [searchText])
+
+    console.log(data)
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -24,7 +33,7 @@ const GlobalSearch = ({navigation}) => {
 
                     {/* Search */}
                     <View style={styles.search_wrapper}>
-                        <TextInput placeholderTextColor={'#1111113f'} placeholder='Search' style={{color: '#000', width: '100%', padding: 0}} />
+                        <TextInput placeholderTextColor={'#1111113f'} onChangeText={(e) => setSearchText(e)} value={searchText} placeholder='Search' style={{color: '#000', width: '100%', padding: 0}} />
                     </View>
 
                     {/* Heading */}
@@ -37,7 +46,7 @@ const GlobalSearch = ({navigation}) => {
                         {
                             loading ? <Text style={{color: '#000'}}>Loading...</Text>
                             :
-                            allAds.map((add, key) => (
+                            data?.map((add, key) => (
                                 <ItemAdd navigation={navigation} add={add} key={key}/>
                             ))
                         }

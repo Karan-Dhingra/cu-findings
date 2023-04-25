@@ -54,7 +54,7 @@ export default function ItemPage({navigation, route}) {
                         {/*  */}
                         <View style={styles.wrap_text}>
                             <Text style={styles.para_content_bold}>{add?.postedByUserName}</Text>
-                            <Text style={styles.para_content}>BT19CSE131</Text>
+                            {/* <Text style={styles.para_content}>BT19CSE131</Text> */}
                         </View>
                     </View>
                 </View>

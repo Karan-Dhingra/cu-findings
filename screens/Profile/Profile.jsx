@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
-import {View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd';
+import { getUserAds } from '../../redux/actions/UserAction';
 
 const Profile = ({navigation}) => {
-    const {loading, allAds} = useSelector((state) => state.fetchAllAdsReducer)
+    const dispatch = useDispatch()
+    const {loading, allAds} = useSelector((state) => state.fetchUserAdsReducer)
+    const {userInfo} = useSelector((state) => state.userLoginReducer)
     const [active, setActive] = useState(1)
+    // console.log('info:',userInfo.image)
+
+    useEffect(() => {
+        if(active === 1)
+            dispatch(getUserAds('myClaimed'))
+        else if(active === 2)
+            dispatch(getUserAds('all'))
+        else if(active === 3)
+            dispatch(getUserAds('myFound'))
+    },[active])
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -22,12 +35,14 @@ const Profile = ({navigation}) => {
             </View>
 
             <View style={styles.profile_info}>
-                <View style={styles.profile_image}></View>
-                <Text style={styles.username}>Anushka Chauhan</Text>
+                <View style={styles.profile_image}>
+                    <Image source={{uri: userInfo?.image}} resizeMode='cover' style={{width: 56, height: 56}}/>
+                </View>
+                <Text style={styles.username}>{userInfo?.username}</Text>
 
                 <View style={styles.info_wrap}>
-                    <Text style={styles.text}>BT19CSE9892</Text>
-                    <Text style={styles.text}>bt19cse9892@iiitn.ac.in</Text>
+                    <Text style={styles.text}>{userInfo?.uid}</Text>
+                    <Text style={styles.text}>{userInfo?.uid}@cuchd.in</Text>
                 </View>
             </View>
 
@@ -91,7 +106,8 @@ const styles = StyleSheet.create({
         height: 56,
         borderRadius: 100,
         borderWidth: 2,
-        borderColor: '#FFF'
+        borderColor: '#FFF',
+        overflow: 'hidden',
     },
     username:{
         fontWeight: '600',

@@ -17,8 +17,12 @@ import {
     USER_REGISTER_FAIL,
     USER_LOGIN_SUCCESS,
     USER_LOGIN_FAIL,
+    FETCH_USER_ADS_REQUEST,
+    FETCH_USER_ADS_SUCCESS,
+    FETCH_USER_ADS_FAIL,
 } from '../constants/UserConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { store } from "../../store";
 
 export const uploadToCloudinary = async (uri) => {
     try {
@@ -27,8 +31,8 @@ export const uploadToCloudinary = async (uri) => {
         const source = {uri,type,name}
         const formData = new FormData()
         formData.append('file', source)
-        formData.append('upload_preset', 'cu_findings')
-        formData.append('cloud_name', 'dognf82sm')
+        formData.append('upload_preset', 'Kurama_Preset_Production')
+        formData.append('cloud_name', 'kuramaverse')
         // const { data } = await axios.post(
         //     'https://api.cloudinary.com/v1_1/dognf82sm/auto/upload',
         //     formData
@@ -39,7 +43,7 @@ export const uploadToCloudinary = async (uri) => {
         let urlValue = ''
 
         let res = await fetch(
-            "https://api.cloudinary.com/v1_1/dognf82sm/auto/upload",
+            "https://api.cloudinary.com/v1_1/kuramaverse/image/upload",
             {
                 method: "post",
                 mode: "cors",
@@ -52,7 +56,7 @@ export const uploadToCloudinary = async (uri) => {
             )
             .then(res=>res.json())
             .then(data=>{
-                // console.log('url' ,data.url)
+                console.log('url' ,data.url)
                 urlValue = data.url
                 return data.url
             })
@@ -211,10 +215,63 @@ export const getAllAds = (type = 'Ongoing') => async (dispatch) => {
     }
 }
 
+export const getUserAds = (type = 'all') => async (dispatch) => {
+    try {
+        dispatch({type: FETCH_USER_ADS_REQUEST})
+        const userLoginReducer = store.getState().userLoginReducer
+        const token = userLoginReducer?.accessToken
+
+        const config = {
+            headers: {
+                'content-type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        }
+
+        const { data } = await axios.get(
+            `${BACKEND_URL}/user/getMyAdds/${type}`,
+            config
+        )
+
+        console.log(data)
+
+        if (data) {
+            let arr = data?.adds
+            arr.reverse()
+            dispatch({
+                type: FETCH_USER_ADS_SUCCESS,
+                payload: arr,
+                filter: type
+            })
+        } else
+            dispatch({
+                type: FETCH_USER_ADS_FAIL,
+                payload: data.msg,
+            })
+    } catch (error) {
+        dispatch({
+            type: FETCH_USER_ADS_FAIL,
+            payload: ErrorMessage(error),
+        })
+    }
+}
+
 export const createAddAction = (item, type='LOST', setModalVisible) => async (dispatch) => {
     try {
         dispatch({ type: CREATE_ADD_REQUEST })
+        const userLoginReducer = store.getState().userLoginReducer
+        const token = userLoginReducer?.accessToken
+
+        const config = {
+            headers: {
+                'content-type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        }
+
+        console.log(item?.itemImage)
         const  cloudinaryUrl = await uploadToCloudinary(item?.itemImage)
+        console.log(cloudinaryUrl)
 
         const { data } = await axios.post(
             `${BACKEND_URL}/user/createAdd`,{
@@ -224,9 +281,10 @@ export const createAddAction = (item, type='LOST', setModalVisible) => async (di
                 timeLastSeen: item?.timeLastSeen,
                 itemImage: cloudinaryUrl,
                 type
-            }
+            },
+            config
         )
-        // console.log(setModalVisible)
+        console.log(data)
 
         if (data && data.status === 200) {
             dispatch({ type: CREATE_ADD_SUCCESS, payload: data?.add })

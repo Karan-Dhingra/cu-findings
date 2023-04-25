@@ -1,15 +1,62 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import {View, StyleSheet, ScrollView, SafeAreaView, Pressable} from 'react-native';
 import { Text } from 'react-native';
+import NotificationCard from '../../components/Notification/NotificationCard/NotificationCard';
 
-const Notification = () => {
+const Notification = ({navigation}) => {
     return (
-        <View>
-            <Text style={{color: '#000'}}>Notification Page, comming soon!</Text>
-        </View>
+        <SafeAreaView style={styles.body_container}>
+            <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 5, padding: 10, paddingBottom: 0}}>
+                <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
+                    <MaterialIcons name='arrow-back-ios' style={{color: '#000', fontSize: 24}}/>
+                </Pressable>
+
+                <Text style={{color: '#001B29CC', fontSize: 18, lineHeight:22, fontWeight: 600}}>Notifications</Text>
+            </View>
+
+            <ScrollView
+                style={styles.scrollViewContainers}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}>
+                    <View style={styles.main_body_container}>
+                        <NotificationCard navigation={navigation}/>
+                        <NotificationCard navigation={navigation}/>
+                        <NotificationCard navigation={navigation}/>
+                        <NotificationCard navigation={navigation}/>
+                    </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
-const styles = StyleSheet.create({})
 
+const styles = StyleSheet.create({
+    body_container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        color: '#000',
+        padding: 20,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    scrollViewContainers:{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        gap: 4,
+    },
+    main_body_container:{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        gap: 0,
+        paddingTop: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingBottom: 45
+    },
+})
 export default Notification;

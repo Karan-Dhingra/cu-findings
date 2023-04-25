@@ -1,5 +1,41 @@
-import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
+import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, FETCH_USER_ADS_FAIL, FETCH_USER_ADS_REQUEST, FETCH_USER_ADS_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const fetchUserAdsRequest = {
+    loading: true,
+    filter: 'all',
+    allAds: [],
+    error: null,
+}
+
+export const fetchUserAdsReducer = (state = fetchUserAdsRequest, action) => {
+    switch (action.type) {
+        case FETCH_USER_ADS_REQUEST:
+            return {
+                filter: 'all',
+                loading: true,
+                allAds: [],
+                error: null,
+            }
+        case FETCH_USER_ADS_SUCCESS:
+            return {
+                allAds: action.payload,
+                filter: action.filter,
+                loading: false,
+                error: null,
+            }
+        case FETCH_USER_ADS_FAIL:
+            return {
+                allAds: [],
+                filter: 'Ongoing',
+                loading: false,
+                error: action.payload,
+            }
+
+        default:
+            return state
+    }
+}
 
 const fetchAllAdsRequest = {
     loading: true,
@@ -69,7 +105,11 @@ export const createAddReducer = (state = createAddState, action) => {
     }
 }
 
-const localUserInfo = AsyncStorage.getItem('user')
+var localUserInfo
+AsyncStorage.getItem('user').then((res) => {
+    console.log(res)
+    localUserInfo = res
+})
 const verificationHash = AsyncStorage.getItem('verificationHash')
 
 const userState = {
@@ -78,7 +118,6 @@ const userState = {
     userInfo: localUserInfo ? localUserInfo.user : null,
     accessToken: localUserInfo?.accessToken || null,
     verificationHash: verificationHash || null,
-    walletNotFound: false,
     expiresAt: localUserInfo?.expireAt || null,
     error: null,
 }
@@ -92,7 +131,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: null,
                 isAdmin: false,
                 accessToken: null,
-                walletNotFound: false,
                 expiresAt: null,
                 error: null,
                 verificationHash: null,
@@ -103,7 +141,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: null,
                 isAdmin: false,
                 accessToken: null,
-                walletNotFound: false,
                 error: null,
                 expiresAt: null,
                 verificationHash: null,
@@ -115,7 +152,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: action.payload ? action.payload?.user : action.payload,
                 accessToken: action.payload.accessToken,
                 verificationHash: action.verificationHash,
-                walletNotFound: false,
                 expiresAt: action.payload.expireAt,
                 error: null,
             }
@@ -126,7 +162,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: null,
                 isAdmin: false,
                 accessToken: null,
-                walletNotFound: true,
                 expiresAt: null,
                 error: action.payload,
                 verificationHash: null,
@@ -138,7 +173,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: null,
                 isAdmin: false,
                 accessToken: null,
-                walletNotFound: true,
                 error: action.payload,
                 expiresAt: null,
                 verificationHash: null,
@@ -150,7 +184,6 @@ export const userLoginReducer = (state = userState, action) => {
                 userInfo: null,
                 isAdmin: false,
                 accessToken: null,
-                walletNotFound: false,
                 error: null,
                 expiresAt: null,
                 verificationHash: null,
