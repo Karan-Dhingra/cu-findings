@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 30,
         paddingRight: 30,
+        paddingBottom: 80,
     },
     para_heading:{
         fontFamily: 'Poppins',

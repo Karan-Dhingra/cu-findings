@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image } from 'react-native';
+import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image, ActivityIndicator } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,6 @@ const Profile = ({navigation}) => {
     const {loading, allAds} = useSelector((state) => state.fetchUserAdsReducer)
     const {userInfo} = useSelector((state) => state.userLoginReducer)
     const [active, setActive] = useState(1)
-    // console.log('info:',userInfo.image)
 
     useEffect(() => {
         if(active === 1)
@@ -66,7 +65,9 @@ const Profile = ({navigation}) => {
 
                         <View style={styles.all_posts}>
                             {
-                                loading ? <Text style={{color: '#000'}}>Loading...</Text>
+                                loading ? <View style={{flex: 1,}}>
+                                    <ActivityIndicator />
+                                </View>
                                 :
                                 allAds.map((add, key) => (
                                     <ItemAdd navigation={navigation} add={add} key={key}/>

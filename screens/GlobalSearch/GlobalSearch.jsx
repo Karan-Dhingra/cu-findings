@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,7 +44,7 @@ const GlobalSearch = ({navigation}) => {
                     {/* List */}
                     <View style={styles.all_posts}>
                         {
-                            loading ? <Text style={{color: '#000'}}>Loading...</Text>
+                            loading ? <ActivityIndicator />
                             :
                             data?.map((add, key) => (
                                 <ItemAdd navigation={navigation} add={add} key={key}/>

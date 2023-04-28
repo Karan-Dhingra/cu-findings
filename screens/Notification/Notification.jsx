@@ -4,8 +4,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {View, StyleSheet, ScrollView, SafeAreaView, Pressable} from 'react-native';
 import { Text } from 'react-native';
 import NotificationCard from '../../components/Notification/NotificationCard/NotificationCard';
+import { useSelector } from 'react-redux';
 
 const Notification = ({navigation}) => {
+    const {notifications, loading} = useSelector((state) => state.fetchUserNotificationReducer)
+
     return (
         <SafeAreaView style={styles.body_container}>
             <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 5, padding: 10, paddingBottom: 0}}>
@@ -21,9 +24,9 @@ const Notification = ({navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                     <View style={styles.main_body_container}>
-                        <NotificationCard navigation={navigation}/>
-                        <NotificationCard navigation={navigation}/>
-                        <NotificationCard navigation={navigation}/>
+                        {notifications?.map((notification, key) => (
+                            <NotificationCard navigation={navigation} key={key} notification={notification}/>
+                        ))}
                         <NotificationCard navigation={navigation}/>
                     </View>
             </ScrollView>

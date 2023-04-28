@@ -1,5 +1,37 @@
-import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, FETCH_USER_ADS_FAIL, FETCH_USER_ADS_REQUEST, FETCH_USER_ADS_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
+import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, FETCH_USER_ADS_FAIL, FETCH_USER_ADS_REQUEST, FETCH_USER_ADS_SUCCESS, GET_NOTIFICATION_FAILED, GET_NOTIFICATION_REQUEST, GET_NOTIFICATION_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_ON_LOAD, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const fetchUserNotificationState = {
+    loading: true,
+    notifications: [],
+    error: null,
+}
+
+export const fetchUserNotificationReducer = (state = fetchUserNotificationState, action) => {
+    switch (action.type) {
+        case GET_NOTIFICATION_REQUEST:
+            return {
+                loading: true,
+                notifications: [],
+                error: null,
+            }
+        case GET_NOTIFICATION_SUCCESS:
+            return {
+                notifications: action.payload,
+                loading: false,
+                error: null,
+            }
+        case GET_NOTIFICATION_FAILED:
+            return {
+                notifications: [],
+                loading: false,
+                error: action.payload,
+            }
+
+        default:
+            return state
+    }
+}
 
 const fetchUserAdsRequest = {
     loading: true,
@@ -27,7 +59,7 @@ export const fetchUserAdsReducer = (state = fetchUserAdsRequest, action) => {
         case FETCH_USER_ADS_FAIL:
             return {
                 allAds: [],
-                filter: 'Ongoing',
+                filter: 'all',
                 loading: false,
                 error: action.payload,
             }
@@ -107,10 +139,11 @@ export const createAddReducer = (state = createAddState, action) => {
 
 var localUserInfo
 AsyncStorage.getItem('user').then((res) => {
-    console.log(res)
+    // console.log('res', res)
     localUserInfo = res
 })
 const verificationHash = AsyncStorage.getItem('verificationHash')
+// console.log('localUserInfo', localUserInfo)
 
 const userState = {
     loading: false,
@@ -124,6 +157,16 @@ const userState = {
 
 export const userLoginReducer = (state = userState, action) => {
     switch (action.type) {
+        case USER_LOGIN_ON_LOAD:
+            return {
+                loading: false,
+                isLogin: action.payload ? true : false,
+                userInfo: action.payload ? action.payload.user : null,
+                accessToken: action.payload?.accessToken || null,
+                verificationHash: null,
+                expiresAt: action.payload?.expireAt || null,
+                error: null,
+            }
         case USER_LOGIN_REQUEST:
             return {
                 loading: true,
@@ -220,6 +263,7 @@ export const userRegisterReducer = (state = userRegiserState, action) => {
                 data: null,
                 error: action.payload,
             }
+
         default:
             return state
     }

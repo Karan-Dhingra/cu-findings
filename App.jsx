@@ -1,7 +1,7 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, Keyboard, ActivityIndicator } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Home from './screens/Home/Home.jsx';
 import ItemPage from './screens/ItemPage/ItemPage.jsx';
@@ -14,9 +14,10 @@ import GlobalSearch from './screens/GlobalSearch/GlobalSearch.jsx';
 import LoginPage from './screens/Auth/LoginPage/LoginPage.jsx';
 import RegisterPage from './screens/Auth/RegisterPage/RegisterPage.jsx';
 import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { dispatchLoginRequestOnLoad } from './redux/actions/UserAction.js';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +59,16 @@ const HomeScreen = () =>{
 
 const BottomNavigationScreen = () => {
   const {isLogin} = useSelector((state) => state.userLoginReducer)
+  const [isKeyboardOpen, setKeyboardOpen] = useState(false)
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardOpen(true)
+    })
+    Keyboard.addListener('keyboardDidHide', (e) => {
+      setKeyboardOpen(false)
+    })
+  }, [])
 
   return(
     <Tab.Navigator
@@ -70,9 +81,9 @@ const BottomNavigationScreen = () => {
             left: 0,
             right: 0,
             height: 70,
+            display: isKeyboardOpen ? 'none' : 'flex'
           },
         }}
-
       >
         <Tab.Screen
           name="Profile"
@@ -167,16 +178,31 @@ const BottomNavigationScreen = () => {
 
 function App() {
   const {isLogin} = useSelector((state) => state.userLoginReducer)
+  const dispatch = useDispatch()
+  const [isLoading, setLoading] = useState(true)
 
-  return (
-    <NavigationContainer>
-      {!isLogin ?
-        <LoginScreen isLogin={isLogin}/>
-        :
-        <BottomNavigationScreen  isLogin={isLogin}/>
-      }
-    </NavigationContainer>
-  );
+  useEffect(() => {
+    AsyncStorage.getItem('user').then((res) => {
+        dispatch(dispatchLoginRequestOnLoad(res))
+        setLoading(false)
+    }).catch((err) => {
+      setLoading(false)
+    })
+  },[])
+
+  if(isLoading){
+    return <ActivityIndicator />
+  }else{
+    return (
+      <NavigationContainer>
+        {!isLogin ?
+          <LoginScreen isLogin={isLogin}/>
+          :
+          <BottomNavigationScreen  isLogin={isLogin}/>
+        }
+      </NavigationContainer>
+    );
+  }
 }
 
 const NormalTabBatOption = ({children}) => {

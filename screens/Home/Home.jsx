@@ -8,6 +8,7 @@ import {
     Platform,
     StatusBar,
     TouchableOpacity,
+    ActivityIndicator,
     Image,
 } from 'react-native';
 import React, {useEffect} from 'react';
@@ -60,7 +61,9 @@ const Home = ({navigation}) => {
 
                 <View style={styles.all_posts}>
                     {
-                        loading ? <Text style={{color: '#000'}}>Loading...</Text>
+                        loading ? <View style={{flex: 1,}}>
+                            <ActivityIndicator />
+                        </View>
                         :
                         allAds.map((add, key) => (
                             <ItemAdd navigation={navigation} add={add} key={key}/>

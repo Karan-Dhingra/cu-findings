@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon, ImageBackground } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon, ImageBackground, KeyboardAvoidingView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const FoundItemPage = ({navigation, route}) => {
@@ -18,31 +18,36 @@ const FoundItemPage = ({navigation, route}) => {
                 style={styles.scrollViewContainers}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
-                    {/* Close Button */}
-                    <View>
-                        <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
-                            <MaterialIcons name='close' style={{color: 'black', fontSize: 24}}/>
-                        </Pressable>
-                    </View>
-
-                    {/* Image */}
-                    <ImageBackground style={styles.image_background} source={{uri: item?.itemImage}}></ImageBackground>
-
-                    {/* Next Button */}
-                    <Pressable style={styles.next_button} onPress={() => {navigation.navigate(`PreviewItemPage`, {uri: params?.uri, add:item})}}>
-                        <Text style={styles.next_text}>Next</Text>
-                        <MaterialIcons name='arrow-forward-ios' style={{color: '#6200EA', fontSize: 14}}/>
-                    </Pressable>
-
-                    {/* Form */}
-                    <View style={styles.form}>
-                        <View style={styles.input_wrapper}>
-                            <Input placeholder={'Name of the item*'} value={item?.title} setItem={(value) => {setItem((state) => ({...state, title: value}))}}/>
-                            <Input placeholder={'Location for collecting item*'} value={item?.location} setItem={(value) => {setItem((state) => ({...state, location: value}))}}/>
-                            <Input placeholder={'Describe about found item*'} value={item?.description} setItem={(value) => {setItem((state) => ({...state, description: value}))}}/>
-                            <Input placeholder={'Seen at*'} value={item?.timeLastSeen} setItem={(value) => {setItem((state) => ({...state, timeLastSeen: value}))}}/>
+                    <KeyboardAvoidingView
+                        style={styles.container}
+                        behavior="padding"
+                    >
+                        {/* Close Button */}
+                        <View>
+                            <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
+                                <MaterialIcons name='close' style={{color: 'black', fontSize: 24}}/>
+                            </Pressable>
                         </View>
-                    </View>
+
+                        {/* Image */}
+                        <ImageBackground style={styles.image_background} source={{uri: item?.itemImage}}></ImageBackground>
+
+                        {/* Next Button */}
+                        <Pressable style={styles.next_button} onPress={() => {navigation.navigate(`PreviewItemPage`, {uri: params?.uri, add:item})}}>
+                            <Text style={styles.next_text}>Next</Text>
+                            <MaterialIcons name='arrow-forward-ios' style={{color: '#6200EA', fontSize: 14}}/>
+                        </Pressable>
+
+                        {/* Form */}
+                        <View style={styles.form}>
+                            <View style={styles.input_wrapper}>
+                                <Input placeholder={'Name of the item*'} value={item?.title} setItem={(value) => {setItem((state) => ({...state, title: value}))}}/>
+                                <Input placeholder={'Location for collecting item*'} value={item?.location} setItem={(value) => {setItem((state) => ({...state, location: value}))}}/>
+                                <Input placeholder={'Describe about found item*'} value={item?.description} setItem={(value) => {setItem((state) => ({...state, description: value}))}}/>
+                                <Input placeholder={'Seen at*'} value={item?.timeLastSeen} setItem={(value) => {setItem((state) => ({...state, timeLastSeen: value}))}}/>
+                            </View>
+                        </View>
+                    </KeyboardAvoidingView>
             </ScrollView>
         </SafeAreaView>
     );

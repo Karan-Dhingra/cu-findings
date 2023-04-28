@@ -7,7 +7,7 @@ const ItemAdd = ({navigation, add}) => {
             <View style={styles.left_wrapper}>
                 <Text style={styles.posted_time}>{add?.timeLastSeen}</Text>
                 <Text style={styles.post_title}>{add?.title}</Text>
-                <Text style={styles.post_description}>{add?.description}</Text>
+                <Text style={styles.post_description}>{add?.description?.length > 70 ? add?.description?.substring(0, 70) + '...' : add?.description}</Text>
                 <Text style={styles.post_claims}>No claims</Text>
             </View>
             <ImageBackground source={{uri: add?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>

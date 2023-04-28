@@ -20,6 +20,10 @@ import {
     FETCH_USER_ADS_REQUEST,
     FETCH_USER_ADS_SUCCESS,
     FETCH_USER_ADS_FAIL,
+    GET_NOTIFICATION_REQUEST,
+    GET_NOTIFICATION_SUCCESS,
+    GET_NOTIFICATION_FAILED,
+    USER_LOGIN_ON_LOAD,
 } from '../constants/UserConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { store } from "../../store";
@@ -106,6 +110,13 @@ export const registerAction = (user, navigation, ToastAndroid) => async(dispatch
     }
 }
 
+export const dispatchLoginRequestOnLoad = (userData) => async(dispatch) =>{
+    dispatch({
+        type: USER_LOGIN_ON_LOAD,
+        payload: JSON.parse(userData)
+    })
+}
+
 export const login = (user, ToastAndroid) => async(dispatch) => {
     try{
         dispatch({
@@ -134,6 +145,14 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             //     ).
 
             //     console.log('SHA', verificationHash)
+            AsyncStorage.setItem('user', JSON.stringify(data))
+            // AsyncStorage.setItem('verificationHash', data)
+            const ItemRet = AsyncStorage.getItem('user').then((res) => {
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
+            // console.log('AsyncStorage ', ItemRet)
 
             dispatch({
                 type: USER_LOGIN_SUCCESS,
@@ -142,8 +161,6 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             })
 
             ToastAndroid.show('Signed In!', ToastAndroid.SHORT);
-            AsyncStorage.setItem('user', JSON.stringify(data))
-            // AsyncStorage.setItem('verificationHash', data)
         } else {
             dispatch({
                 type: USER_LOGIN_FAIL,
@@ -215,6 +232,44 @@ export const getAllAds = (type = 'Ongoing') => async (dispatch) => {
     }
 }
 
+export const getUserNotifications = () => async (dispatch) => {
+    try {
+        dispatch({type: GET_NOTIFICATION_REQUEST})
+        const userLoginReducer = store.getState().userLoginReducer
+        const token = userLoginReducer?.accessToken
+
+        const config = {
+            headers: {
+                'content-type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        }
+
+        const { data } = await axios.get(
+            `${BACKEND_URL}/user/getNotifications`,
+            config
+        )
+
+        if (data) {
+            let arr = data?.notifications
+            arr.reverse()
+            dispatch({
+                type: GET_NOTIFICATION_SUCCESS,
+                payload: arr,
+            })
+        } else
+            dispatch({
+                type: GET_NOTIFICATION_FAILED,
+                payload: data.msg,
+            })
+    } catch (error) {
+        dispatch({
+            type: GET_NOTIFICATION_FAILED,
+            payload: ErrorMessage(error),
+        })
+    }
+}
+
 export const getUserAds = (type = 'all') => async (dispatch) => {
     try {
         dispatch({type: FETCH_USER_ADS_REQUEST})
@@ -232,8 +287,6 @@ export const getUserAds = (type = 'all') => async (dispatch) => {
             `${BACKEND_URL}/user/getMyAdds/${type}`,
             config
         )
-
-        console.log(data)
 
         if (data) {
             let arr = data?.adds

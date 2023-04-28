@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text, ToastAndroid } from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, SafeAreaView, Text, ToastAndroid, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerAction } from '../../../redux/actions/UserAction';
 
@@ -48,31 +48,37 @@ const RegisterPage = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.body_container}>
-            <View>
-                <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('LandingPage')}}>
-                    <MaterialIcons name='arrow-back-ios' style={{color: 'black', fontSize: 24}}/>
-                </Pressable>
-            </View>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior="padding"
+            >
 
-            {/*  */}
-            <View style={styles.main_container}>
-                <Text style={styles.heading}>Register</Text>
-                <View style={styles.text_wrapper}>
-                    <View style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
-                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input_row} placeholder={'First Name'} value={user.firstName} onChangeText={(value) => {setUser((state) => ({...state, firstName: value}))}}/>
-                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input_row} placeholder={'Last Name'} value={user.lastName}  onChangeText={(value) => {setUser((state) => ({...state, lastName: value}))}}/>
-                    </View>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Personal email'} keyboardType={'email-address'} value={user.personalEmail}  onChangeText={(value) => {setUser((state) => ({...state, personalEmail: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail}  onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Password'} secureTextEntry={true} value={user.password}  onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Confirm Password'} secureTextEntry={true} value={user.confirmPassword}  onChangeText={(value) => {setUser((state) => ({...state, confirmPassword: value}))}}/>
-
-                    <Pressable style={styles.signIn_btn} onPress={() => register()}>
-                        <Text style={styles.btn_text}>{loading ? 'Registering...' : 'Register'}</Text>
+                <View>
+                    <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('LandingPage')}}>
+                        <MaterialIcons name='arrow-back-ios' style={{color: 'black', fontSize: 24}}/>
                     </Pressable>
                 </View>
-            </View>
+
+                {/*  */}
+                <View style={styles.main_container}>
+                    <Text style={styles.heading}>Register</Text>
+                    <View style={styles.text_wrapper}>
+                        <View style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
+                            <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input_row} placeholder={'First Name'} value={user.firstName} onChangeText={(value) => {setUser((state) => ({...state, firstName: value}))}}/>
+                            <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input_row} placeholder={'Last Name'} value={user.lastName}  onChangeText={(value) => {setUser((state) => ({...state, lastName: value}))}}/>
+                        </View>
+                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}}/>
+                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Personal email'} keyboardType={'email-address'} value={user.personalEmail}  onChangeText={(value) => {setUser((state) => ({...state, personalEmail: value}))}}/>
+                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail}  onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}}/>
+                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Password'} secureTextEntry={true} value={user.password}  onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
+                        <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Confirm Password'} secureTextEntry={true} value={user.confirmPassword}  onChangeText={(value) => {setUser((state) => ({...state, confirmPassword: value}))}}/>
+
+                        <Pressable style={styles.signIn_btn} onPress={() => register()}>
+                            <Text style={styles.btn_text}>{loading ? 'Registering...' : 'Register'}</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }

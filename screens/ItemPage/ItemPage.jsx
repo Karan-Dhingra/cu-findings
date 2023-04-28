@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, Text, Pressable, View } from 'react-native'
 import React from 'react'
 import Slider from '../../components/ItemPage/Slider/Slider'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -10,6 +10,10 @@ export default function ItemPage({navigation, route}) {
 
     return (
         <SafeAreaView style={styles.body_container}>
+            {/* Claim Button */}
+            <Pressable style={styles.claim_btn}>
+                <Text style={styles.claim_btn_text}>Claim your item</Text>
+            </Pressable>
             <ScrollView
                 style={styles.scrollViewContainers}
                 showsHorizontalScrollIndicator={false}
@@ -73,6 +77,20 @@ const styles = StyleSheet.create({
         // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
+    },
+    claim_btn:{
+        position: 'absolute',
+        right: 20,
+        bottom: 100,
+        backgroundColor: '#6200EE',
+        padding: 12,
+        paddingHorizontal: 16,
+        borderRadius: 64
+    },
+    claim_btn_text:{
+        color: '#FFFFFF',
+        fontSize: 14
     },
     scrollViewContainers:{
         display: 'flex',
@@ -88,6 +106,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 30,
         paddingRight: 30,
+        paddingBottom: 80,
     },
     para_heading:{
         fontFamily: 'Poppins',
