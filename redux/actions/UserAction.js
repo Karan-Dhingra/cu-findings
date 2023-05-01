@@ -270,6 +270,7 @@ export const getUserNotifications = () => async (dispatch) => {
                 payload: data.msg,
             })
     } catch (error) {
+        console.log(error)
         dispatch({
             type: GET_NOTIFICATION_FAILED,
             payload: ErrorMessage(error),

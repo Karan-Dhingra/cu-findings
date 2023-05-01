@@ -48,10 +48,10 @@ const RegisterPage = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.body_container}>
-            <KeyboardAvoidingView
+            {/* <KeyboardAvoidingView
                 style={styles.container}
                 behavior="padding"
-            >
+            > */}
 
                 <View>
                     <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('LandingPage')}}>
@@ -78,7 +78,7 @@ const RegisterPage = ({navigation}) => {
                         </Pressable>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
+            {/* </KeyboardAvoidingView> */}
         </SafeAreaView>
     );
 }
@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
         padding: 8,
         fontSize: 15,
         fontWeight: '400',
-        width: '100%'
+        width: '100%',
+        color: '#000'
     },
     text_input_row:{
         borderBottomColor: '#2C006733',

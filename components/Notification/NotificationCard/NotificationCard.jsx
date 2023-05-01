@@ -2,14 +2,16 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react
 import React from 'react'
 
 const NotificationCard = ({navigation, notification}) => {
+    console.log(notification)
+
     return (
-    <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', 'add')}>
+    <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', add = {...notification})}>
         <View style={styles.left_wrapper}>
-            <Text style={styles.small_breif}>{'Someone Lost'}</Text>
-            <Text style={styles.post_title}>{'Iphone 7'}</Text>
+            <Text style={styles.small_breif}>{notification?.type}</Text>
+            <Text style={styles.post_title}>{notification?.title}</Text>
             <Text style={styles.post_claims}>No claims</Text>
         </View>
-        <ImageBackground source={{uri: 'https://th.bing.com/th/id/OIP.yZt1tjaCsa8nwuUo0hk_ugHaEB?pid=ImgDet&rs=1'}} style={styles.right_wrapper} resizeMode='contain'/>
+        <ImageBackground source={{uri: notification?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>
     </TouchableOpacity>
     )
 }

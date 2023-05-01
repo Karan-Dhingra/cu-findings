@@ -6,7 +6,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 export default function ItemPage({navigation, route}) {
     const {params: add} = route
-    console.log('ADD', add)
 
     return (
         <SafeAreaView style={styles.body_container}>

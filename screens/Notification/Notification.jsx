@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {View, StyleSheet, ScrollView, SafeAreaView, Pressable} from 'react-native';
+import { View, StyleSheet, ScrollView, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native';
 import NotificationCard from '../../components/Notification/NotificationCard/NotificationCard';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserNotifications } from '../../redux/actions/UserAction';
 
 const Notification = ({navigation}) => {
+    const dispatch = useDispatch()
     const {notifications, loading} = useSelector((state) => state.fetchUserNotificationReducer)
+
+    useEffect(() => {
+        dispatch(getUserNotifications())
+    }, [])
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -24,10 +30,13 @@ const Notification = ({navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                     <View style={styles.main_body_container}>
-                        {notifications?.map((notification, key) => (
-                            <NotificationCard navigation={navigation} key={key} notification={notification}/>
-                        ))}
-                        <NotificationCard navigation={navigation}/>
+                        {loading ? <ActivityIndicator /> :
+                            <>
+                                {notifications?.map((notification, key) => (
+                                    <NotificationCard navigation={navigation} key={key} notification={notification}/>
+                                    ))}
+                            </>
+                        }
                     </View>
             </ScrollView>
         </SafeAreaView>
