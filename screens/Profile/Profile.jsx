@@ -5,12 +5,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useDispatch, useSelector } from 'react-redux';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd';
 import { getUserAds } from '../../redux/actions/UserAction';
+import ProfilePopoverModal from '../../components/shared/Modals/ProfilePopover';
 
 const Profile = ({navigation}) => {
     const dispatch = useDispatch()
     const {loading, allAds} = useSelector((state) => state.fetchUserAdsReducer)
     const {userInfo} = useSelector((state) => state.userLoginReducer)
     const [active, setActive] = useState(1)
+    const [modalVisible, setModalVisible] = useState(false)
 
     useEffect(() => {
         if(active === 1)
@@ -28,7 +30,9 @@ const Profile = ({navigation}) => {
                     <MaterialIcons name='arrow-back-ios' style={{color: '#FFF', fontSize: 24}}/>
                 </Pressable>
 
-                <Pressable style={{height: 30, width: 30}} onPress={() => {navigation.navigate('Home')}}>
+                <Pressable style={{height: 30, width: 30}} onPress={async() => {
+                        setModalVisible(true)
+                }}>
                     <MaterialCommunityIcons name='dots-vertical' style={{color: '#FFF', fontSize: 24}}/>
                 </Pressable>
             </View>
@@ -77,6 +81,8 @@ const Profile = ({navigation}) => {
                     </View>
                 </View>
             </ScrollView>
+
+            {modalVisible && <ProfilePopoverModal modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={navigation} />}
         </SafeAreaView>
     );
 }

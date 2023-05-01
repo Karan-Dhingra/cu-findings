@@ -56,7 +56,7 @@ const LoginPage = ({navigation, setLogin}) => {
             return
         }
         // setLogin(true)
-        dispatch(login(user))
+        dispatch(login(user, ToastAndroid))
     }
 
     return (

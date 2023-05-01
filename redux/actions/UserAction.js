@@ -24,6 +24,7 @@ import {
     GET_NOTIFICATION_SUCCESS,
     GET_NOTIFICATION_FAILED,
     USER_LOGIN_ON_LOAD,
+    USER_LOGOUT,
 } from '../constants/UserConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { store } from "../../store";
@@ -123,6 +124,8 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             type: USER_LOGIN_REQUEST
         })
 
+        console.log(user)
+
         const { data } = await axios.post(
             `${BACKEND_URL}/auth/login`,
             {
@@ -146,13 +149,6 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
 
             //     console.log('SHA', verificationHash)
             AsyncStorage.setItem('user', JSON.stringify(data))
-            // AsyncStorage.setItem('verificationHash', data)
-            const ItemRet = AsyncStorage.getItem('user').then((res) => {
-                console.log(res)
-            }).catch((err) => {
-                console.log(err)
-            })
-            // console.log('AsyncStorage ', ItemRet)
 
             dispatch({
                 type: USER_LOGIN_SUCCESS,
@@ -160,7 +156,8 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
                 verificationHash: "OK",
             })
 
-            ToastAndroid.show('Signed In!', ToastAndroid.SHORT);
+            if(ToastAndroid)
+                ToastAndroid.show('Signed In!', ToastAndroid.SHORT);
         } else {
             dispatch({
                 type: USER_LOGIN_FAIL,
@@ -169,8 +166,18 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             })
         }
     }catch(err){
-
+        console.log(err)
+            dispatch({
+            type: USER_LOGIN_FAIL,
+            payload: ErrorMessage(err)
+        })
     }
+}
+
+export const logout = () => async(dispatch) => {
+    dispatch({
+        type: USER_LOGOUT
+    })
 }
 
 export const getAddById = (id, setAdd) => async (dispatch) => {
