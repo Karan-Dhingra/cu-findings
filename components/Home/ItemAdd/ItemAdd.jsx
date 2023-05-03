@@ -1,14 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { getDateString } from '../../../constants';
 
 const ItemAdd = ({navigation, add}) => {
     return (
         <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', add)}>
             <View style={styles.left_wrapper}>
-                <Text style={styles.posted_time}>{add?.timeLastSeen}</Text>
+                <View style={{flexDirection: 'row', gap: 5}}>
+                    <Text style={styles.posted_time}>{getDateString(new Date(add?.createdAt).getTime())}</Text>
+                    {add?.collected && <Text style={styles.recovered}>Recovererd</Text>}
+                </View>
                 <Text style={styles.post_title}>{add?.title}</Text>
                 <Text style={styles.post_description}>{add?.description?.length > 70 ? add?.description?.substring(0, 70) + '...' : add?.description}</Text>
-                <Text style={styles.post_claims}>No claims</Text>
+                <Text style={add?.claimedBy?.length > 0 ? styles.post_claims_true : styles.post_claims}>{add?.collected ? 'Collected' : add?.claimedBy?.length > 0 ? `${add?.claimedBy?.length} Claims` : 'No claims'}</Text>
             </View>
             <ImageBackground source={{uri: add?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>
         </TouchableOpacity>
@@ -54,6 +58,14 @@ const styles = StyleSheet.create({
         lineHeight: 12,
         color: 'rgba(51, 54, 56, 0.8)',
     },
+    recovered:{
+        fontFamily: 'Poppins',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        fontSize: 11,
+        lineHeight: 12,
+        color: '#63CF3E',
+    },
     post_title:{
         fontFamily: 'Poppins',
         fontStyle: 'normal',
@@ -77,6 +89,14 @@ const styles = StyleSheet.create({
         fontSize: 11,
         lineHeight: 16,
         color: '#C5C5C5',
+    },
+    post_claims_true:{
+        fontFamily: 'Poppins',
+        fontStyle: 'normal',
+        fontWeight: '400',
+        fontSize: 11,
+        lineHeight: 16,
+        color: '#001B29CC',
     },
     right_wrapper:{
         width: 100,

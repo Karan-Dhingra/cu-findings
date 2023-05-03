@@ -17,7 +17,7 @@ import DefaultPage from './screens/Auth/DefaultPage/DefaultPage.jsx';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { dispatchLoginRequestOnLoad } from './redux/actions/UserAction.js';
+import { dispatchLoginRequestOnLoad, logout } from './redux/actions/UserAction.js';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -177,9 +177,32 @@ const BottomNavigationScreen = () => {
 }
 
 function App() {
-  const {isLogin} = useSelector((state) => state.userLoginReducer)
+  const {isLogin, expiresAt} = useSelector((state) => state.userLoginReducer)
   const dispatch = useDispatch()
   const [isLoading, setLoading] = useState(true)
+
+  // Auto Logout
+  useEffect(() => {
+      const currentTime = new Date().getTime()
+
+      const autoLogout = () => {
+        AsyncStorage.clear();
+        dispatch(logout())
+      }
+
+      if (expiresAt && currentTime > expiresAt) {
+          autoLogout()
+      }
+
+      if (expiresAt) {
+          const timeout = expiresAt - currentTime
+          setTimeout(() => {
+              autoLogout()
+          }, timeout)
+      }
+
+      // if (isLogin) dispatch(updateLocalUserInfo())
+  }, [isLogin])
 
   useEffect(() => {
     AsyncStorage.getItem('user').then((res) => {

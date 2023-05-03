@@ -1,16 +1,18 @@
-import React from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, Image, View, TouchableOpacity } from 'react-native';
-import { claimItem } from '../../../redux/actions/AddAction';
+import React, {useState} from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, Image, View, TouchableOpacity, TextInput, ToastAndroid } from 'react-native';
+import { replyAdd } from '../../../redux/actions/AddAction';
 import { useDispatch, useSelector } from 'react-redux';
 
-const ItemClaimModal = ({modalVisible, id, setModalVisible, setClaimedVisible, text='You can collect your item within 12 hours of claiming it!', navigation}) => {
+const ShareReplyModal = ({modalVisible, id, setModalVisible, navigation}) => {
     const dispatch = useDispatch()
-    const {loading} = useSelector((state) => state.claimAddReducer)
+    const {loading} = useSelector((state) => state.sendReplyReducer)
+    const [msg, setMsg] = useState('')
 
-    const complete = () => {
+    const success = () => {
         setModalVisible(false)
-        setClaimedVisible(true)
+        navigation.replace('Home')
     }
+
     const error = () => {
         setModalVisible(false)
     }
@@ -29,18 +31,19 @@ const ItemClaimModal = ({modalVisible, id, setModalVisible, setClaimedVisible, t
                     onPress={() => setModalVisible(false)}
                 >
                     <View style={styles.modalView}>
-                        <Image source={require('../../../assets/item_claimed_modal.png')} />
-                        <Text style={styles.modalTextHeading}>Claim your item</Text>
-                        <Text style={styles.modalText}>{text}</Text>
+                        {/* <Image source={require('../../../assets/collected_item_modal.png')} /> */}
+                        <Text style={styles.modalTextHeading}>Where you have seen it???</Text>
+                        {/* <Text style={styles.modalText}>{text}</Text> */}
+                        <TextInput value={msg} onChangeText={(e) => setMsg(e)} style={{borderWidth: 1, borderRadius: 4, width: '100%', padding: 4, paddingHorizontal: 10}} multiline placeholder='I have seen at...'/>
                         <Pressable
                             style={styles.button}
+                            disabled={msg === ''}
                             onPress={() => {
-                                dispatch(claimItem(id, complete, error))
+                                dispatch(replyAdd(id, success, error, msg, ToastAndroid))
                             }}
-                            disabled={loading}
                         >
                             <Text style={styles.button_text}>
-                                {loading ? 'Confirming...' : 'Confirm'}
+                                {loading ? 'Sharing...' : 'Share'}
                             </Text>
                         </Pressable>
                 </View>
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 60
+        marginTop: 30
     },
     button_text:{
         color: '#FFF',
@@ -105,4 +108,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ItemClaimModal;
+export default ShareReplyModal;

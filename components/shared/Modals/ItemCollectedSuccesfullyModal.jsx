@@ -1,46 +1,33 @@
 import React from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, Image, View, TouchableOpacity } from 'react-native';
-import { claimItem } from '../../../redux/actions/AddAction';
-import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Modal, StyleSheet, Text, Pressable,Image, View, TouchableOpacity } from 'react-native';
 
-const ItemClaimModal = ({modalVisible, id, setModalVisible, setClaimedVisible, text='You can collect your item within 12 hours of claiming it!', navigation}) => {
-    const dispatch = useDispatch()
-    const {loading} = useSelector((state) => state.claimAddReducer)
-
-    const complete = () => {
-        setModalVisible(false)
-        setClaimedVisible(true)
-    }
-    const error = () => {
-        setModalVisible(false)
-    }
+const ItemCollectedSuccesfullyModal = ({modalVisible, setModalVisible, text='Use the collected item only after sanitizing or after 24 hours', navigation}) => {
 
     return (
         <Modal
-            animationType="fade"
+            animationType="none"
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
                 Alert.alert('Modal has been closed.');
-                setModalVisible(false);
+                setModalVisible(!modalVisible);
             }}>
                 <TouchableOpacity
                     style={{ backgroundColor: '#33363873', flex: 1,justifyContent:'center' }}
-                    onPress={() => setModalVisible(false)}
                 >
                     <View style={styles.modalView}>
-                        <Image source={require('../../../assets/item_claimed_modal.png')} />
-                        <Text style={styles.modalTextHeading}>Claim your item</Text>
+                        <Image source={require('../../../assets/collected_item_modal.png')} />
+                        <Text style={styles.modalTextHeading}>Item Collected Successfully!</Text>
                         <Text style={styles.modalText}>{text}</Text>
                         <Pressable
                             style={styles.button}
                             onPress={() => {
-                                dispatch(claimItem(id, complete, error))
+                                setModalVisible(false)
+                                navigation.replace('Home')
                             }}
-                            disabled={loading}
                         >
                             <Text style={styles.button_text}>
-                                {loading ? 'Confirming...' : 'Confirm'}
+                                OK
                             </Text>
                         </Pressable>
                 </View>
@@ -105,4 +92,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ItemClaimModal;
+export default ItemCollectedSuccesfullyModal;

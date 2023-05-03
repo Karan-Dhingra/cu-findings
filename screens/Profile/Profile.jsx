@@ -18,7 +18,7 @@ const Profile = ({navigation}) => {
         if(active === 1)
             dispatch(getUserAds('myClaimed'))
         else if(active === 2)
-            dispatch(getUserAds('all'))
+            dispatch(getUserAds('myShared'))
         else if(active === 3)
             dispatch(getUserAds('myFound'))
     },[active])
