@@ -34,7 +34,7 @@ const ShareReplyModal = ({modalVisible, id, setModalVisible, navigation}) => {
                         {/* <Image source={require('../../../assets/collected_item_modal.png')} /> */}
                         <Text style={styles.modalTextHeading}>Where you have seen it???</Text>
                         {/* <Text style={styles.modalText}>{text}</Text> */}
-                        <TextInput value={msg} onChangeText={(e) => setMsg(e)} style={{borderWidth: 1, borderRadius: 4, width: '100%', padding: 4, paddingHorizontal: 10}} multiline placeholder='I have seen at...'/>
+                        <TextInput value={msg} onChangeText={(e) => setMsg(e)} style={{borderWidth: 1, borderRadius: 4, width: '100%', padding: 4, paddingHorizontal: 10, color: '#222'}} multiline placeholder='I have seen at...'/>
                         <Pressable
                             style={styles.button}
                             disabled={msg === ''}

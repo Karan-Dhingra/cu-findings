@@ -36,7 +36,7 @@ export const fetchUserNotificationReducer = (state = fetchUserNotificationState,
 const fetchUserAdsRequest = {
     loading: true,
     filter: 'all',
-    allAds: [],
+    allAds: {},
     error: null,
 }
 
@@ -46,7 +46,7 @@ export const fetchUserAdsReducer = (state = fetchUserAdsRequest, action) => {
             return {
                 filter: 'all',
                 loading: true,
-                allAds: [],
+                allAds: {},
                 error: null,
             }
         case FETCH_USER_ADS_SUCCESS:
@@ -58,7 +58,7 @@ export const fetchUserAdsReducer = (state = fetchUserAdsRequest, action) => {
             }
         case FETCH_USER_ADS_FAIL:
             return {
-                allAds: [],
+                allAds: {},
                 filter: 'all',
                 loading: false,
                 error: action.payload,

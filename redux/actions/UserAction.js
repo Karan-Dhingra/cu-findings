@@ -270,7 +270,7 @@ export const getUserNotifications = () => async (dispatch) => {
                 payload: data.msg,
             })
     } catch (error) {
-        console.log(error)
+        console.log(ErrorMessage(error))
         dispatch({
             type: GET_NOTIFICATION_FAILED,
             payload: ErrorMessage(error),
@@ -278,7 +278,7 @@ export const getUserNotifications = () => async (dispatch) => {
     }
 }
 
-export const getUserAds = (type = 'all') => async (dispatch) => {
+export const getUserAds = () => async (dispatch) => {
     try {
         dispatch({type: FETCH_USER_ADS_REQUEST})
         const userLoginReducer = store.getState().userLoginReducer
@@ -292,17 +292,14 @@ export const getUserAds = (type = 'all') => async (dispatch) => {
         }
 
         const { data } = await axios.get(
-            `${BACKEND_URL}/user/getMyAdds/${type}`,
+            `${BACKEND_URL}/user/getMyAdds`,
             config
         )
 
         if (data) {
-            let arr = data?.adds
-            arr.reverse()
             dispatch({
                 type: FETCH_USER_ADS_SUCCESS,
-                payload: arr,
-                filter: type
+                payload: data,
             })
         } else
             dispatch({

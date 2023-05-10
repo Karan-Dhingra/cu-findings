@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, StyleSheet, ScrollView, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, SafeAreaView, Pressable, ActivityIndicator, RefreshControl } from 'react-native';
 import { Text } from 'react-native';
 import NotificationCard from '../../components/Notification/NotificationCard/NotificationCard';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,10 @@ const Notification = ({navigation}) => {
     const {notifications, loading} = useSelector((state) => state.fetchUserNotificationReducer)
 
     useEffect(() => {
+        dispatch(getUserNotifications())
+    }, [])
+
+    const onRefresh = useCallback(() => {
         dispatch(getUserNotifications())
     }, [])
 
@@ -27,16 +31,15 @@ const Notification = ({navigation}) => {
 
             <ScrollView
                 style={styles.scrollViewContainers}
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
                     <View style={styles.main_body_container}>
-                        {loading ? <ActivityIndicator /> :
-                            <>
-                                {notifications?.map((notification, key) => (
-                                    <NotificationCard navigation={navigation} key={key} notification={notification}/>
-                                    ))}
-                            </>
-                        }
+                        {notifications?.map((notification, key) => (
+                            <NotificationCard navigation={navigation} key={key} notification={notification}/>
+                            ))}
                     </View>
             </ScrollView>
         </SafeAreaView>

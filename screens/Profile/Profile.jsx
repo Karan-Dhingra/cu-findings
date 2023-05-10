@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView, Text, Pressable, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,14 +14,15 @@ const Profile = ({navigation}) => {
     const [active, setActive] = useState(1)
     const [modalVisible, setModalVisible] = useState(false)
 
+    const onRefresh = useCallback(() => {
+        dispatch(getUserAds())
+    }, [])
+
     useEffect(() => {
-        if(active === 1)
-            dispatch(getUserAds('myClaimed'))
-        else if(active === 2)
-            dispatch(getUserAds('myShared'))
-        else if(active === 3)
-            dispatch(getUserAds('myFound'))
-    },[active])
+        dispatch(getUserAds())
+    },[])
+
+    // console.log(allAds)
 
     return (
         <SafeAreaView style={styles.body_container}>
@@ -52,6 +53,9 @@ const Profile = ({navigation}) => {
             <ScrollView
                 style={styles.scrollViewContainers}
                 showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
                 showsVerticalScrollIndicator={false}>
                 <View style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <View style={styles.wrap_profile_info}>
@@ -60,22 +64,31 @@ const Profile = ({navigation}) => {
                                 <Text style={[styles.top_link_text, active === 1 && styles.active_link]}>Claimed Items</Text>
                             </Pressable>
                             <Pressable onPress={() => setActive(2)}>
-                            <Text style={[styles.top_link_text, active === 2 && styles.active_link]}>Share ads</Text>
+                                <Text style={[styles.top_link_text, active === 2 && styles.active_link]}>Share ads</Text>
                             </Pressable>
                             <Pressable onPress={() => setActive(3)}>
-                            <Text style={[styles.top_link_text, active === 3 && styles.active_link]}>Found Items</Text>
+                                <Text style={[styles.top_link_text, active === 3 && styles.active_link]}>Found Items</Text>
                             </Pressable>
                         </View>
 
                         <View style={styles.all_posts}>
                             {
-                                loading ? <View style={{flex: 1,}}>
-                                    <ActivityIndicator />
-                                </View>
+                                active === 1 ?
+                                    allAds?.claimedAds?.map((add, key) => (
+                                        <ItemAdd navigation={navigation} add={add} key={key}/>
+                                    ))
+                                : active === 2 ?
+                                    allAds?.sharedAds?.map((add, key) => (
+                                        <ItemAdd navigation={navigation} add={add} key={key}/>
+                                    ))
+                                : active === 3 ?
+                                    allAds?.foundAds?.map((add, key) => (
+                                        <ItemAdd navigation={navigation} add={add} key={key}/>
+                                    ))
                                 :
-                                allAds.map((add, key) => (
-                                    <ItemAdd navigation={navigation} add={add} key={key}/>
-                                ))
+                                    allAds?.allAds?.map((add, key) => (
+                                        <ItemAdd navigation={navigation} add={add} key={key}/>
+                                    ))
                             }
                         </View>
                     </View>

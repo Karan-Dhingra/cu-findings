@@ -2,8 +2,6 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react
 import React from 'react'
 
 const NotificationCard = ({navigation, notification}) => {
-    console.log(notification)
-
     return (
     <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', add = {...notification})}>
         <View style={styles.left_wrapper}>

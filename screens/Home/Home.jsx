@@ -10,15 +10,22 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Image,
+    RefreshControl,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd.jsx';
 import { getAllAds } from '../../redux/actions/UserAction.js';
 import { useDispatch, useSelector } from 'react-redux';
+import Octicons from 'react-native-vector-icons/Octicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 const Home = ({navigation}) => {
     const dispatch = useDispatch()
     const {loading, allAds} = useSelector((state) => state.fetchAllAdsReducer)
+
+    const onRefresh = useCallback(() => {
+        dispatch(getAllAds())
+    }, []);
 
     useEffect(() => {
         const fetch = async() => {
@@ -33,6 +40,9 @@ const Home = ({navigation}) => {
             <ScrollView
                 style={styles.scrollViewContainers}
                 showsHorizontalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
                 showsVerticalScrollIndicator={false}>
                 {/* Lost an Item? */}
                 <View style={styles.lost_box_container}>
@@ -44,7 +54,14 @@ const Home = ({navigation}) => {
                     </View>
 
                     <TouchableOpacity style={styles.add_button} onPress={() => {navigation.navigate({name: 'CreateItem'})}}>
-                        <Image source={require('../../assets/add_post.png')} resizeMode='contain' />
+                        {/* <Image source={require('../../assets/add_post.png')} resizeMode='contain' /> */}
+                        <FontAwesome
+                            name='plus-circle'
+                            style={{
+                            fontSize: 35,
+                            color: '#FFF'
+                            }}
+                        />
                         {/* <Icon name='Add' /> */}
                     </TouchableOpacity>
                 </View>
@@ -54,7 +71,13 @@ const Home = ({navigation}) => {
                     <Text style={styles.search_heading}>Search lost Items</Text>
 
                     <TouchableOpacity style={styles.add_button} onPress={() => navigation.navigate('GlobalSearch')}>
-                        <Image source={require('../../assets/search.png')} resizeMode='contain' />
+                        <Octicons
+                            name='search'
+                            style={{
+                                fontSize: 25,
+                                color: '#33434CCC'
+                            }}
+                        />
                         {/* <Icon name='Add' /> */}
                     </TouchableOpacity>
                 </View>

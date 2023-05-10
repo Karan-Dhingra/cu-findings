@@ -33,7 +33,7 @@ export default function ItemPage({navigation, route}) {
     }, [errorClaiming])
 
     useEffect(() => {
-        if(add?.claimedBy.find((e) => e.toString() === userInfo?._id.toString())){
+        if(add?.claimedBy?.find((e) => e.toString() === userInfo?._id.toString())){
             setIsClaimed(true)
         }
     },[add])

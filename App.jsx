@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dispatchLoginRequestOnLoad, logout } from './redux/actions/UserAction.js';
+import Octicons from 'react-native-vector-icons/Octicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -94,15 +96,22 @@ const BottomNavigationScreen = () => {
             showLabel: false,
             tabBarIcon: ({focused}) => (
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    source={require('./assets/Profile.png')}
-                    resizeMode='contain'
-                    style={{
-                      width: 25,
-                      height: 25,
-                      // tintColor: focused ? '#e32f45' : '#748c94'
-                    }}
-                  />
+                  {
+                    focused ? <Octicons
+                      name='person-fill'
+                      style={{
+                        fontSize: 25,
+                        color: '#6200EE'
+                      }}
+                    />
+                    : <Octicons
+                      name='person'
+                      style={{
+                        fontSize: 25,
+                        color: '#6200EE'
+                      }}
+                    />
+                  }
                 </View>
             )
           }}
@@ -117,25 +126,21 @@ const BottomNavigationScreen = () => {
             tabBarIcon: ({focused}) => {
               if(focused) {
                 return (
-                  <Image
-                    source={require('./assets/camera_alt.png')}
-                    resizeMode='contain'
+                  <MaterialCommunityIcons
+                    name='camera'
                     style={{
-                      width: 25,
-                      height: 25,
-                      // tintColor: focused ? '#e32f45' : '#748c94'
+                      fontSize: 25,
+                      color: '#FFF'
                     }}
                   />
                 )
               }else{
                 return (
-                  <Image
-                    source={require('./assets/Home.png')}
-                    resizeMode='contain'
+                  <Octicons
+                    name='home'
                     style={{
-                      width: 25,
-                      height: 25,
-                      // tintColor: focused ? '#e32f45' : '#748c94'
+                      fontSize: 25,
+                      color: '#6200EE'
                     }}
                   />
                 )
@@ -159,15 +164,22 @@ const BottomNavigationScreen = () => {
             tabBarShowLabel: false,
             tabBarIcon: ({focused}) => (
                 <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    source={require('./assets/Notification.png')}
-                    resizeMode='contain'
-                    style={{
-                      width: 25,
-                      height: 25,
-                      // tintColor: focused ? '#e32f45' : '#748c94'
-                    }}
-                  />
+                  {focused ?
+                    <Octicons
+                      name='bell-fill'
+                      style={{
+                        fontSize: 25,
+                        color: '#6200EE'
+                      }}
+                    />
+                    : <Octicons
+                      name='bell'
+                      style={{
+                        fontSize: 25,
+                        color: '#6200EE'
+                      }}
+                    />
+                }
                 </View>
             )
           }}

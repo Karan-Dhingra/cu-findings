@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, ScrollView, TextInput, Button, Pressable, Icon, Alert, ImageBackground, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Octicons from 'react-native-vector-icons/Octicons'
 import { useDispatch, useSelector } from 'react-redux';
 import { createAddAction } from '../../redux/actions/UserAction';
 import ItemCreatedModal from '../../components/shared/Modals/ItemCreatedModal';
@@ -78,7 +79,10 @@ const CreateItem = ({navigation}) => {
                                 item?.itemImage ? <Pressable onPress={() => {selectImage()}} style={styles.item_image}>
                                     <Image source={{uri: item?.itemImage}} style={{width: '100%', height: '100%'}} />
                                 </Pressable>
-                                : <Pressable onPress={() => {selectImage()}} style={styles.upload_image}></Pressable>
+                                : <Pressable onPress={() => {selectImage()}} style={styles.upload_image}>
+                                    <Octicons name='upload' style={{fontSize: 15, color: '#6200EE'}}/>
+                                    <Text style={styles.upload_text}>Add photo from library</Text>
+                                </Pressable>
                             }
                         </View>
                         {/* <View style={styles.upload_image_wrapper}>
@@ -160,7 +164,15 @@ const styles = StyleSheet.create({
         height: 100,
         width: 300,
         borderRadius: 5,
-        backgroundColor: '#cccccc6a'
+        // backgroundColor: '#cccccc6a',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        gap: 8
+    },
+    upload_text:{
+        color: '#8484849C',
+        fontSize: 14
     },
     item_image:{
         height: 200,
