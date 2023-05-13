@@ -15,7 +15,7 @@ import {
 import { logout } from '../../../redux/actions/UserAction';
 import { useDispatch } from 'react-redux';
 
-const ProfilePopoverModal = ({ modalVisible, setModalVisible, navigation }) => {
+const ProfilePopoverModal = ({ modalVisible, setModalVisible, navigation, setProfileEditModal }) => {
     const dispatch = useDispatch()
 
     return (
@@ -40,7 +40,13 @@ const ProfilePopoverModal = ({ modalVisible, setModalVisible, navigation }) => {
                             justifyContent: 'center',
                         }}
                     >
-                        <Pressable style={{ padding: 8, paddingHorizontal: 20, }} onPress={() => {
+                        {/* <Pressable style={{ padding: 8, paddingHorizontal: 20, width: '100%'}} onPress={() => {
+                            setProfileEditModal(true)
+                            setModalVisible(false)
+                        }}>
+                            <Text style={styles.modalText}>Edit</Text>
+                        </Pressable> */}
+                        <Pressable style={{ padding: 8, paddingHorizontal: 20, width: '100%'}} onPress={() => {
                             AsyncStorage.clear();
                             dispatch(logout())
                         }}>
@@ -103,7 +109,8 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 16,
         lineHeight: 24,
-        textAlign: 'center',
+        // textAlign: 'center',
+        width: '100%'
     },
 });
 

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ItemAdd from '../../components/Home/ItemAdd/ItemAdd';
 import { getUserAds } from '../../redux/actions/UserAction';
 import ProfilePopoverModal from '../../components/shared/Modals/ProfilePopover';
+import ProfileEditModal from '../../components/shared/Modals/ProfileEditModal';
 
 const Profile = ({navigation}) => {
     const dispatch = useDispatch()
@@ -13,6 +14,7 @@ const Profile = ({navigation}) => {
     const {userInfo} = useSelector((state) => state.userLoginReducer)
     const [active, setActive] = useState(1)
     const [modalVisible, setModalVisible] = useState(false)
+    const [profileEditModal, setProfileEditModal] = useState(false)
 
     const onRefresh = useCallback(() => {
         dispatch(getUserAds())
@@ -95,7 +97,8 @@ const Profile = ({navigation}) => {
                 </View>
             </ScrollView>
 
-            {modalVisible && <ProfilePopoverModal modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={navigation} />}
+            {profileEditModal && <ProfileEditModal modalVisible={profileEditModal} setModalVisible={setProfileEditModal} navigation={navigation} />}
+            {modalVisible && <ProfilePopoverModal setProfileEditModal={setProfileEditModal} modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={navigation} />}
         </SafeAreaView>
     );
 }
