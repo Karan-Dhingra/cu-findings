@@ -27,7 +27,6 @@ const Tab = createBottomTabNavigator();
 
 const LoginScreen = () =>{
   const {isLogin} = useSelector((state) => state.userLoginReducer)
-  console.log(isLogin)
 
   return(
     <Stack.Navigator
@@ -242,7 +241,7 @@ function App() {
 
 const NormalTabBatOption = ({children}) => {
   const navigation = useNavigation();
-  console.log(navigation.navigate)
+
   return(
     <TouchableOpacity
       style={{
@@ -279,11 +278,9 @@ const CustomTabBarOption = ({children}) => {
         // }
         let options = {}
         const result = await launchCamera(options)
-        console.log(result)
 
         if (!result?.didCancel) {
           const uri = result?.assets[0]?.uri
-            console.log('result', result)
             navigation.navigate('FoundItemPage', {uri})
         } else {
           // navigation.navigate('Item', {uri: uri})

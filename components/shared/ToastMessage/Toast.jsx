@@ -8,7 +8,7 @@ const Toast = () => {
         };
     }, []);
     const onNewToast = data => {
-        console.log(data)
+        // console.log(data)
     }
     return (
         <View>

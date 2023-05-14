@@ -36,8 +36,8 @@ export const uploadToCloudinary = async (uri) => {
         const source = {uri,type,name}
         const formData = new FormData()
         formData.append('file', source)
-        formData.append('upload_preset', 'Kurama_Preset_Production')
-        formData.append('cloud_name', 'kuramaverse')
+        formData.append('upload_preset', 'cu_findings')
+        formData.append('cloud_name', 'dognf82sm')
         // const { data } = await axios.post(
         //     'https://api.cloudinary.com/v1_1/dognf82sm/auto/upload',
         //     formData
@@ -48,7 +48,7 @@ export const uploadToCloudinary = async (uri) => {
         let urlValue = ''
 
         let res = await fetch(
-            "https://api.cloudinary.com/v1_1/kuramaverse/image/upload",
+            "https://api.cloudinary.com/v1_1/dognf82sm/image/upload",
             {
                 method: "post",
                 mode: "cors",
@@ -61,7 +61,6 @@ export const uploadToCloudinary = async (uri) => {
             )
             .then(res=>res.json())
             .then(data=>{
-                console.log('url' ,data.url)
                 urlValue = data.url
                 return data.url
             })
@@ -77,7 +76,6 @@ export const uploadToCloudinary = async (uri) => {
 
 export const registerAction = (user, navigation, ToastAndroid) => async(dispatch) => {
     try {
-        console.log('registerAction', user)
         dispatch({ type: USER_REGISTER_REQUEST })
         const { data } = await axios.post(
             `${BACKEND_URL}/auth/register`,
@@ -124,8 +122,6 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             type: USER_LOGIN_REQUEST
         })
 
-        console.log(user)
-
         const { data } = await axios.post(
             `${BACKEND_URL}/auth/login`,
             {
@@ -166,7 +162,7 @@ export const login = (user, ToastAndroid) => async(dispatch) => {
             })
         }
     }catch(err){
-        console.log(err)
+        console.log(err.toString())
             dispatch({
             type: USER_LOGIN_FAIL,
             payload: ErrorMessage(err)
@@ -327,7 +323,6 @@ export const createAddAction = (item, type='LOST', setModalVisible) => async (di
             },
         }
 
-        console.log(item?.itemImage)
         const  cloudinaryUrl = await uploadToCloudinary(item?.itemImage)
         console.log(cloudinaryUrl)
 
@@ -342,11 +337,9 @@ export const createAddAction = (item, type='LOST', setModalVisible) => async (di
             },
             config
         )
-        console.log(data)
 
         if (data && data.status === 200) {
             dispatch({ type: CREATE_ADD_SUCCESS, payload: data?.add })
-            console.log('data', data)
             if(setModalVisible) setModalVisible(true)
         } else{
             dispatch({

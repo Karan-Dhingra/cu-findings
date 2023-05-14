@@ -8,7 +8,7 @@ export const globalSearch = (searchText) => async(dispatch) => {
             return
         }
         dispatch({type: GLOBAL_SEARCH_REQUEST})
-        console.log('HI')
+
         await axios
             .get(`${BACKEND_URL}/public/searchAllAdds/${searchText}`)
             .then((res) => {

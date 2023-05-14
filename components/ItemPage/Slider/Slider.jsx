@@ -41,8 +41,7 @@ const Slider = ({navigation, imageArray}) => {
                     imageArray.map((image, imageIndex) => {
                         return (
                             <View style={{width: windowWidth-40, height: 250}} key={imageIndex}>
-                                <ImageBackground source={{uri: image}} style={styles.card}>
-                                </ImageBackground>
+                                <Image source={{uri: image}} style={styles.card} />
                             </View>
                         )
                     })
@@ -139,6 +138,8 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
+        height: '100%',
     },
     textContainer: {
         backgroundColor: 'rgba(0,0,0, 0.7)',

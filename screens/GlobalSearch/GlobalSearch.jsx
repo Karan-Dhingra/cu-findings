@@ -14,8 +14,6 @@ const GlobalSearch = ({navigation}) => {
         dispatch(globalSearch(searchText))
     }, [searchText])
 
-    console.log(data)
-
     return (
         <SafeAreaView style={styles.body_container}>
             <ScrollView

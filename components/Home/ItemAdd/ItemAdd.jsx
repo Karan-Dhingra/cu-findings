@@ -1,8 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, Image, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native';
 import { getDateString } from '../../../constants';
 
 const ItemAdd = ({navigation, add}) => {
+    const [loading, setLoading] = useState(true)
+
     return (
         <TouchableOpacity style={styles.card_wrapper} onPress={() => navigation.navigate('Item', add)}>
             <View style={styles.left_wrapper}>
@@ -14,7 +16,12 @@ const ItemAdd = ({navigation, add}) => {
                 <Text style={styles.post_description}>{add?.description?.length > 70 ? add?.description?.substring(0, 70) + '...' : add?.description}</Text>
                 <Text style={add?.claimedBy?.length > 0 ? styles.post_claims_true : styles.post_claims}>{add?.collected ? 'Collected' : add?.claimedBy?.length > 0 ? `${add?.claimedBy?.length} Claims` : 'No claims'}</Text>
             </View>
-            <ImageBackground source={{uri: add?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>
+            <View style={{position: 'relative', width: 100, height: 100}}>
+                <Image source={{uri: `${add?.itemImage}?width=100&height=100`}} style={[styles.right_wrapper]} resizeMode='contain' onLoadStart={() => {setLoading(true)}} onLoadEnd={() => {setLoading(false)}} onError={(error) => {console.log(error)}}/>
+                {loading && <View style={styles.container_loading}>
+                    <ActivityIndicator size="small" color="#111"/>
+                </View>}
+            </View>
         </TouchableOpacity>
     );
 }
@@ -43,6 +50,13 @@ const styles = StyleSheet.create({
         // elevation: 2,
         width: '100%',
         flex: 1
+    },
+    container_loading:{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     left_wrapper: {
         display: 'flex',

@@ -47,7 +47,6 @@ const LoginPage = ({navigation, setLogin}) => {
     }, [error])
 
     const signIn = () => {
-        console.log(user)
         if(!user.officialEmail){
             ToastAndroid.show('Email is Required!', ToastAndroid.SHORT);
             return
@@ -72,7 +71,7 @@ const LoginPage = ({navigation, setLogin}) => {
                 <Text style={styles.heading}>Sign in</Text>
                 <View style={styles.text_wrapper}>
                     {/* <TextInput style={styles.text_input} placeholder={'Username'} value={user.username} onChangeText={(value) => {setUser((state) => ({...state, username: value}))}} /> */}
-                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Institute email'} keyboardType={'email-address'} value={user.officialEmail} onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}} />
+                    <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} placeholder={'Your email'} keyboardType={'email-address'} value={user.officialEmail} onChangeText={(value) => {setUser((state) => ({...state, officialEmail: value}))}} />
                     <TextInput placeholderTextColor={'#1111113f'} style={styles.text_input} secureTextEntry={true} placeholder={'Password'} value={user.password} onChangeText={(value) => {setUser((state) => ({...state, password: value}))}}/>
 
                     <Pressable style={styles.signIn_btn} onPress={() => {signIn()}} disabled={loading}>

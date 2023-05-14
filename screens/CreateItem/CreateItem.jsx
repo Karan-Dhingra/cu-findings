@@ -31,7 +31,6 @@ const CreateItem = ({navigation}) => {
         const result = await launchImageLibrary(options)
 
         if (!result?.didCancel) {
-            console.log('result', result)
             setItem((state) => ({...state, itemImage: result?.assets[0]?.uri}))
         } else {
             Alert.alert('You did not select any image.')
