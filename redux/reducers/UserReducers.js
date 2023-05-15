@@ -1,4 +1,4 @@
-import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, FETCH_USER_ADS_FAIL, FETCH_USER_ADS_REQUEST, FETCH_USER_ADS_SUCCESS, GET_NOTIFICATION_FAILED, GET_NOTIFICATION_REQUEST, GET_NOTIFICATION_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_ON_LOAD, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
+import { CREATE_ADD_FAIL, CREATE_ADD_REQUEST, CREATE_ADD_SUCCESS, FETCH_ALL_ADS_FAIL, FETCH_ALL_ADS_REQUEST, FETCH_ALL_ADS_SUCCESS, FETCH_USER_ADS_FAIL, FETCH_USER_ADS_REQUEST, FETCH_USER_ADS_SUCCESS, GET_NOTIFICATION_FAILED, GET_NOTIFICATION_REQUEST, GET_NOTIFICATION_SUCCESS, UPDATE_PROFILE_FAIL, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_ON_LOAD, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_RESETTING_LOGIN, WALLET_NOT_FOUND } from "../constants/UserConstants"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const fetchUserNotificationState = {
@@ -68,6 +68,39 @@ export const fetchUserAdsReducer = (state = fetchUserAdsRequest, action) => {
             return state
     }
 }
+
+const updateProfile = {
+    loading: false,
+    data: [],
+    error: null,
+}
+
+export const updateProfileReducer = (state = updateProfile, action) => {
+    switch (action.type) {
+        case UPDATE_PROFILE_REQUEST:
+            return {
+                loading: true,
+                data: [],
+                error: null,
+            }
+        case UPDATE_PROFILE_SUCCESS:
+            return {
+                loading: false,
+                data: action.payload,
+                error: null,
+            }
+        case UPDATE_PROFILE_FAIL:
+            return {
+                loading: false,
+                data: [],
+                error: action.payload,
+            }
+
+        default:
+            return state
+    }
+}
+
 
 const fetchAllAdsRequest = {
     loading: true,

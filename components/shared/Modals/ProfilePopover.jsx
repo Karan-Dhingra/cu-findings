@@ -40,12 +40,12 @@ const ProfilePopoverModal = ({ modalVisible, setModalVisible, navigation, setPro
                             justifyContent: 'center',
                         }}
                     >
-                        {/* <Pressable style={{ padding: 8, paddingHorizontal: 20, width: '100%'}} onPress={() => {
+                        <Pressable style={{ padding: 8, paddingHorizontal: 20, width: '100%'}} onPress={() => {
                             setProfileEditModal(true)
                             setModalVisible(false)
                         }}>
                             <Text style={styles.modalText}>Edit</Text>
-                        </Pressable> */}
+                        </Pressable>
                         <Pressable style={{ padding: 8, paddingHorizontal: 20, width: '100%'}} onPress={() => {
                             AsyncStorage.clear();
                             dispatch(logout())

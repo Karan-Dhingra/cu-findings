@@ -17,6 +17,36 @@ const RegisterPage = ({navigation}) => {
         confirmPassword: '',
     })
 
+    const handleValidation= (passwordInputValue)=>{
+        const uppercaseRegExp   = /(?=.*?[A-Z])/;
+        const lowercaseRegExp   = /(?=.*?[a-z])/;
+        const digitsRegExp      = /(?=.*?[0-9])/;
+        const specialCharRegExp = /(?=.*?[#?!@$%^&*-])/;
+        const minLengthRegExp   = /.{8,}/;
+        const passwordLength =      passwordInputValue.length;
+        const uppercasePassword =   uppercaseRegExp.test(passwordInputValue);
+        const lowercasePassword =   lowercaseRegExp.test(passwordInputValue);
+        const digitsPassword =      digitsRegExp.test(passwordInputValue);
+        const specialCharPassword = specialCharRegExp.test(passwordInputValue);
+        const minLengthPassword =   minLengthRegExp.test(passwordInputValue);
+
+        if(passwordLength===0){
+                return "Password is empty";
+        }else if(!uppercasePassword){
+                return "At least one Uppercase";
+        }else if(!lowercasePassword){
+                return "At least one Lowercase";
+        }else if(!digitsPassword){
+                return "At least one digit";
+        }else if(!specialCharPassword){
+                return "At least one Special Characters";
+        }else if(!minLengthPassword){
+                return "At least minumum 8 characters";
+        }else{
+            return "";
+        }
+    }
+
     useEffect(() => {
         if(error){
             ToastAndroid.show(error, ToastAndroid.SHORT);
@@ -24,6 +54,7 @@ const RegisterPage = ({navigation}) => {
     }, [error])
 
     const register = () => {
+        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if(!user.username){
             ToastAndroid.show('Username is required!', ToastAndroid.SHORT);
             return
@@ -34,10 +65,22 @@ const RegisterPage = ({navigation}) => {
             ToastAndroid.show('Personal Email is required!', ToastAndroid.SHORT);
             return
         }else if(!user.officialEmail) {
-            ToastAndroid.show('Official Email is required!', ToastAndroid.SHORT);
+            ToastAndroid.show('College/University Email is required!', ToastAndroid.SHORT);
+            return
+        }else if(!user.personalEmail.match(validRegex)) {
+            ToastAndroid.show('Personal Email is not Valid!', ToastAndroid.SHORT);
+            return
+        }else if(!user.officialEmail.match(validRegex)) {
+            ToastAndroid.show('College/University Email is not Valid!', ToastAndroid.SHORT);
+            return
+        }else if(user.personalEmail === user.officialEmail) {
+            ToastAndroid.show('Personal and Your College Email Id shouldnot be same!', ToastAndroid.SHORT);
             return
         }else if(!user.password) {
             ToastAndroid.show('Password is required!', ToastAndroid.SHORT);
+            return
+        }else if(handleValidation(user.password)) {
+            ToastAndroid.show(handleValidation(user.password), ToastAndroid.SHORT);
             return
         }else if(user.password !== user.confirmPassword) {
             ToastAndroid.show('Password doesnt matched!', ToastAndroid.SHORT);

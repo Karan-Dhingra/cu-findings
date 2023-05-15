@@ -1,4 +1,5 @@
 // import BcryptReactNative from 'bcrypt-react-native';
+import ImgToBase64 from 'react-native-image-base64';
 import axios from "axios";
 import { BACKEND_URL, ErrorMessage } from "../../constants"
 import {
@@ -25,6 +26,9 @@ import {
     GET_NOTIFICATION_FAILED,
     USER_LOGIN_ON_LOAD,
     USER_LOGOUT,
+    UPDATE_PROFILE_SUCCESS,
+    UPDATE_PROFILE_FAIL,
+    UPDATE_PROFILE_REQUEST,
 } from '../constants/UserConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { store } from "../../store";
@@ -114,6 +118,47 @@ export const dispatchLoginRequestOnLoad = (userData) => async(dispatch) =>{
         type: USER_LOGIN_ON_LOAD,
         payload: JSON.parse(userData)
     })
+}
+
+export const updateLocalUserInfo = () => async (dispatch) => {
+    const userLoginReducer = store.getState().userLoginReducer
+    const token = userLoginReducer?.accessToken
+
+    const config = {
+        headers: {
+            'content-type': 'application/json',
+            authorization: `Bearer ${token}`,
+        },
+    }
+
+    if (token) {
+        await axios
+            .get(`${BACKEND_URL}/auth/getUser`, config)
+            .then(async (res) => {
+                if (res?.data?.status === 200) {
+                    dispatch({
+                        type: USER_LOGIN_SUCCESS,
+                        payload: res.data,
+                    })
+
+                    await AsyncStorage.removeItem('user')
+                    await AsyncStorage.setItem('user', JSON.stringify(res?.data))
+                } else {
+                    await AsyncStorage.clear()
+                    dispatch({
+                        type: USER_LOGIN_FAIL,
+                        payload: 'Something Failed...',
+                    })
+                }
+            })
+            .catch(async(error) => {
+                if (error.response.data.msg == 'Invalid Token') {
+                    await AsyncStorage.clear()
+                    window.location.reload()
+                }
+                console.log(error)
+            })
+    }
 }
 
 export const login = (user, ToastAndroid) => async(dispatch) => {
@@ -235,6 +280,77 @@ export const getAllAds = (type = 'Ongoing') => async (dispatch) => {
     }
 }
 
+export const updateProfileAction = (userData, ToastAndroid, setModal) => async (dispatch) => {
+    try {
+        dispatch({ type: UPDATE_PROFILE_REQUEST })
+
+        const userLoginReducer = store.getState().userLoginReducer
+        const token = userLoginReducer?.accessToken
+
+        const config = {
+            headers: {
+                'content-type': 'application/json',
+                'authorization': 'Bearer ' + token
+            },
+        }
+
+        var base64String = userData?.image
+
+        if(!/^data/.test(base64String)){
+            console.log('image-updated')
+            base64String = await ImgToBase64.getBase64String(userData?.image)
+        }
+
+        const { data } = await axios.post(
+            `${BACKEND_URL}/user/updateProfile`,
+            {
+                username: userData?.username,
+                firstName: userData?.firstName,
+                lastName: userData?.lastName,
+                image: !/^data/.test(userData?.image) ? `data:image/png;base64,${base64String}` : userData?.image,
+                phoneNumber: userData?.phoneNumber
+            },
+            config
+        )
+
+        if (data && data.status === 200) {
+            dispatch(updateLocalUserInfo())
+
+            if(setModal)
+                setModal(false)
+
+            if(ToastAndroid)
+                ToastAndroid.show('Profile Updated', ToastAndroid.SHORT);
+
+            dispatch({
+                type: UPDATE_PROFILE_SUCCESS,
+                payload: data.data,
+            })
+        } else{
+            dispatch({
+                type: UPDATE_PROFILE_FAIL,
+                payload: data.msg,
+            })
+
+            if(ToastAndroid)
+                ToastAndroid.show(data.msg, ToastAndroid.SHORT);
+        }
+    } catch (error) {
+        dispatch({
+            type: UPDATE_PROFILE_FAIL,
+            payload:
+                error.response && error.response.data.msg
+                    ? error.response.data.msg
+                    : error.message,
+        })
+
+        if(ToastAndroid)
+                ToastAndroid.show(error.response && error.response.data.msg
+                    ? error.response.data.msg
+                    : error.message, ToastAndroid.SHORT);
+    }
+}
+
 export const getUserNotifications = () => async (dispatch) => {
     try {
         dispatch({type: GET_NOTIFICATION_REQUEST})
@@ -323,8 +439,8 @@ export const createAddAction = (item, type='LOST', setModalVisible) => async (di
             },
         }
 
-        const  cloudinaryUrl = await uploadToCloudinary(item?.itemImage)
-        console.log(cloudinaryUrl)
+        // const  cloudinaryUrl = await uploadToCloudinary(item?.itemImage)
+        const base64String = await ImgToBase64.getBase64String(item?.itemImage)
 
         const { data } = await axios.post(
             `${BACKEND_URL}/user/createAdd`,{
@@ -332,7 +448,7 @@ export const createAddAction = (item, type='LOST', setModalVisible) => async (di
                 description: item?.description,
                 location: item?.location,
                 timeLastSeen: item?.timeLastSeen,
-                itemImage: cloudinaryUrl,
+                itemImage: `data:image/png;base64,${base64String}`,
                 type
             },
             config

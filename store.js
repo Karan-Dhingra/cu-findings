@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
-import { fetchAllAdsReducer, createAddReducer, userLoginReducer, userRegisterReducer, fetchUserAdsReducer, fetchUserNotificationReducer } from './redux/reducers/UserReducers';
+import { fetchAllAdsReducer, createAddReducer, userLoginReducer, userRegisterReducer, fetchUserAdsReducer, fetchUserNotificationReducer, updateProfileReducer } from './redux/reducers/UserReducers';
 import { globalSearchReducer } from './redux/reducers/PublicReducers';
 import { claimAddReducer, unclaimAddReducer, collectAddReducer, sendReplyReducer } from './redux/reducers/AddReducer';
 
@@ -17,7 +17,8 @@ const reducer = combineReducers({
     claimAddReducer,
     unclaimAddReducer,
     collectAddReducer,
-    sendReplyReducer
+    sendReplyReducer,
+    updateProfileReducer
 })
 
 export const store = configureStore({

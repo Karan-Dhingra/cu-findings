@@ -1,30 +1,61 @@
 import React, {useState} from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable,Image, View, TouchableOpacity } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable,Image, View, TouchableOpacity, ToastAndroid } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { collectItem } from '../../../redux/actions/AddAction';
-import CheckBox from '@react-native-community/checkbox';
 import { TextInput } from '@react-native-material/core';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { updateProfileAction } from '../../../redux/actions/UserAction';
 
-const ProfileEditModal = ({modalVisible, setModalVisible, id, text='Use the collected item only after sanitizing or after 24 hours', navigation}) => {
+const ProfileEditModal = ({modalVisible, setModalVisible}) => {
     const dispatch = useDispatch()
-    const [check, setCheck] = useState(false)
     const {userInfo} = useSelector((state) => state.userLoginReducer)
-    const {loading} = useSelector((state) => state.collectAddReducer)
+    const {loading} = useSelector((state) => state.updateProfileReducer)
 
     const [userData, setUserData] = useState({
         firstName: userInfo?.firstName,
         lastName: userInfo?.lastName,
         uid: userInfo?.uid,
         phoneNumber: userInfo?.phoneNumber,
+        image: userInfo?.image,
         username: userInfo?.username,
     })
+
+    const isChanged = () => {
+        if(
+            userData.firstName !== userInfo?.firstName ||
+            userData.lastName !== userInfo?.lastName ||
+            userData.phoneNumber !== userInfo?.phoneNumber ||
+            userData.image !== userInfo?.image ||
+            userData.username !== userInfo?.username
+        )
+            return true
+
+        return false
+    }
 
     const complete = () => {
         setModalVisible(false)
     }
     const error = () => {
         setModalVisible(false)
+    }
+
+    const selectImage = async() => {
+        const options = {
+            title: 'Select Photo',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        const result = await launchImageLibrary(options)
+
+        if (!result?.didCancel) {
+            setUserData((state) => ({...state, image: result?.assets[0]?.uri}))
+        } else {
+            Alert.alert('You did not select any image.')
+        }
     }
 
     return (
@@ -50,25 +81,28 @@ const ProfileEditModal = ({modalVisible, setModalVisible, id, text='Use the coll
 
                         <Text style={styles.item_collected_by}>Update Profile</Text>
 
-                        <Pressable>
-                            <Image source={{uri: userInfo?.image}} style={styles.imageContainer} />
+                        <Pressable style={styles.imageContainerHolder} onPress={() => selectImage()}>
+                            <Image source={{uri: userData?.image}} style={styles.imageContainer} />
+                            <View style={styles.overlay_edit}>
+                                <MaterialIcons name='edit' style={{color: '#7B61FF', fontSize: 25}}/>
+                            </View>
                         </Pressable>
 
-                        <Input placeholder={`First Name`} value={userData?.firstName} setItem={(value) => {setItem((state) => ({...state, firstName: value}))}}/>
-                        <Input placeholder={`Last Name`} value={userData?.lastName} setItem={(value) => {setItem((state) => ({...state, lastName: value}))}}/>
-                        <Input placeholder={`Username`} value={userData?.username} setItem={(value) => {setItem((state) => ({...state, username: value}))}}/>
-                        <Input placeholder={`Phone Number`} value={userData?.phoneNumber} setItem={(value) => {setItem((state) => ({...state, phoneNumber: value}))}}/>
+                        <Input placeholder={`First Name`} value={userData?.firstName} setUserData={(value) => {setUserData((state) => ({...state, firstName: value}))}}/>
+                        <Input placeholder={`Last Name`} value={userData?.lastName} setUserData={(value) => {setUserData((state) => ({...state, lastName: value}))}}/>
+                        <Input placeholder={`Username`} value={userData?.username} setUserData={(value) => {setUserData((state) => ({...state, username: value}))}}/>
+                        <Input placeholder={`Phone Number`} value={userData?.phoneNumber} setUserData={(value) => {setUserData((state) => ({...state, phoneNumber: value}))}}/>
                         <Input placeholder={`UID`} value={userData?.uid} notEditable/>
 
                         <Pressable
-                            style={!check ? [styles.button, {opacity: 0.7}] : styles.button}
+                            style={!isChanged() ? [styles.button, {opacity: 0.7}] : styles.button}
                             onPress={() => {
-                                // dispatch(collectItem(id, complete, error, ToastAndroid))
+                                dispatch(updateProfileAction(userData, ToastAndroid, setModalVisible))
                             }}
-                            disabled={!check}
+                            disabled={!isChanged() || loading}
                         >
                             <Text style={styles.button_text}>
-                                Update
+                                {loading ? 'Updating...' : 'Update'}
                             </Text>
                         </Pressable>
                 </View>
@@ -77,8 +111,8 @@ const ProfileEditModal = ({modalVisible, setModalVisible, id, text='Use the coll
     );
 };
 
-const Input = ({placeholder, value, setItem, notEditable}) => {
-    return <TextInput editable={!notEditable} placeholderTextColor={'#1111113f'} placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setItem(value)}/>
+const Input = ({placeholder, value, setUserData, notEditable}) => {
+    return <TextInput editable={!notEditable} placeholderTextColor={'#1111113f'} placeholder={placeholder} style={styles.input} value={value} onChangeText={(value) => setUserData(value)}/>
 }
 
 const styles = StyleSheet.create({
@@ -107,7 +141,7 @@ const styles = StyleSheet.create({
         // height: 40
         color: '#000'
     },
-    imageContainer:{
+    imageContainerHolder:{
         width: 70,
         height: 70,
         minWidth: 70,
@@ -115,7 +149,22 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         borderWidth: 2.5,
         borderColor: '#7B61FF',
-        marginBottom: 10
+        marginBottom: 20,
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    overlay_edit:{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        zIndex: 1,
+        backgroundColor: '#00000093',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageContainer:{
+        width: '100%',
+        height: '100%',
     },
     item_collected_by:{
         fontWeight: '600',

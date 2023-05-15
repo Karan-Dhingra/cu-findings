@@ -12,6 +12,7 @@ const ItemCreatedModal = ({modalVisible, setModalVisible, text='You just helped 
                 setModalVisible(!modalVisible);
             }}>
                 <TouchableOpacity
+                    disabled
                     style={{ backgroundColor: '#33363873', flex: 1,justifyContent:'center' }}
                 >
                     <View style={styles.modalView}>

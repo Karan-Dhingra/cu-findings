@@ -17,7 +17,7 @@ const ItemAdd = ({navigation, add}) => {
                 <Text style={add?.claimedBy?.length > 0 ? styles.post_claims_true : styles.post_claims}>{add?.collected ? 'Collected' : add?.claimedBy?.length > 0 ? `${add?.claimedBy?.length} Claims` : 'No claims'}</Text>
             </View>
             <View style={{position: 'relative', width: 100, height: 100}}>
-                <Image source={{uri: `${add?.itemImage}?width=100&height=100`}} style={[styles.right_wrapper]} resizeMode='contain' onLoadStart={() => {setLoading(true)}} onLoadEnd={() => {setLoading(false)}} onError={(error) => {console.log(error)}}/>
+                <Image source={{uri: `${add?.itemImage}`}} style={[styles.right_wrapper]} resizeMode='contain' onLoadStart={() => {setLoading(true)}} onLoadEnd={() => {setLoading(false)}} onError={(error) => {console.log(error)}}/>
                 {loading && <View style={styles.container_loading}>
                     <ActivityIndicator size="small" color="#111"/>
                 </View>}

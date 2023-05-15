@@ -8,7 +8,7 @@ const NotificationCard = ({navigation, notification}) => {
         <View style={styles.left_wrapper}>
             <Text style={styles.small_breif}>{notification?.type}</Text>
             <Text style={styles.post_title}>{notification?.title}</Text>
-            <Text style={styles.post_claims}>No claims</Text>
+            {/* <Text style={styles.post_claims}>No claims</Text> */}
         </View>
         <ImageBackground source={{uri: notification?.itemImage}} style={styles.right_wrapper} resizeMode='contain'/>
     </View>
